@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a1e23">
+<title>TunnelGuard – Fit-for-Work</title>
+<style>
+:root{--bg:#f2f0eb;--card:#fff;--ink:#1c2126;--mut:#66707b;--line:#e1ddd5;--brand:#f59e0b;--dark:#1a1e23;--ok:#15803d;--okbg:#dcfce7;--warn:#b45309;--warnbg:#fef3c7;--bad:#b91c1c;--badbg:#fee2e2;--info:#1d4ed8;--infobg:#dbeafe;--r:14px}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit;color:inherit}
+.app{min-height:100dvh;display:flex;flex-direction:column}
+header{background:var(--dark);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:30;padding-top:max(10px,env(safe-area-inset-top))}
+header .logo{font-weight:800;letter-spacing:.3px}header .logo span{color:var(--brand)}
+header .who{margin-left:auto;text-align:right;font-size:13px;line-height:1.2}header .who small{color:#aab2bb;display:block}
+.sosbtn{background:var(--bad);color:#fff;border:2px solid #fff3;border-radius:10px;padding:8px 10px;font-weight:800;cursor:pointer;white-space:nowrap}
+.sosbtn.on{animation:blink 1s infinite}
+@keyframes blink{50%{background:#7f1d1d}}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--dark);display:flex;overflow-x:auto;padding-bottom:env(safe-area-inset-bottom);border-top:1px solid #333}
+nav button{flex:0 0 auto;min-width:74px;background:none;border:0;color:#aab2bb;padding:8px 6px;font-size:11px;cursor:pointer;position:relative}
+nav button i{display:block;font-style:normal;font-size:20px}
+nav button.on{color:var(--brand);box-shadow:inset 0 3px 0 var(--brand)}
+nav .dot{position:absolute;top:4px;right:14px;background:var(--bad);color:#fff;border-radius:9px;font-size:10px;padding:0 5px;font-weight:700}
+main{flex:1;width:100%;max-width:1100px;margin:0 auto;padding:14px 14px 96px}
+@media(min-width:900px){nav{position:static;justify-content:center}nav button{flex-direction:row;font-size:14px;min-width:0;padding:12px 16px}nav button i{display:inline;margin-right:6px;font-size:16px}main{padding-bottom:30px}}
+h1{font-size:22px;margin:4px 0 12px}h2{font-size:18px;margin:16px 0 8px}h3{font-size:16px;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.grid{display:grid;gap:12px}.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}.g4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px;cursor:pointer}.kpi b{font-size:28px;display:block;line-height:1.1}.kpi span{color:var(--mut);font-size:13px}
+.kpi.ok b{color:var(--ok)}.kpi.warn b{color:var(--warn)}.kpi.bad b{color:var(--bad)}
+.mut{color:var(--mut)}.small{font-size:13px}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.sp{flex:1}
+label{display:block;font-size:14px;font-weight:600;margin:10px 0 4px}
+input[type=text],input[type=email],input[type=tel],input[type=password],input[type=number],input[type=date],input[type=time],input[type=datetime-local],input[type=search],select,textarea{width:100%;padding:11px 12px;border:1px solid #c9c4ba;border-radius:10px;background:#fff;font-size:16px}
+textarea{min-height:80px}
+.chk{display:flex;gap:10px;align-items:center;font-weight:500;padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin:4px 0;background:#fafaf8}
+.chk input{width:20px;height:20px}
+.yn{display:flex;gap:8px}.yn label{flex:1;margin:0;text-align:center;border:1px solid #c9c4ba;border-radius:10px;padding:10px;cursor:pointer;font-weight:600}.yn input{display:none}.yn input:checked+span{display:block}
+.yn label:has(input:checked){background:var(--dark);color:#fff}
+.btn{border:1px solid #b9b3a8;background:#fff;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#1a1e23}.btn.ok{background:var(--ok);color:#fff;border-color:var(--ok)}.btn.bad{background:var(--bad);color:#fff;border-color:var(--bad)}.btn.dark{background:var(--dark);color:#fff}
+.btn.lg{padding:14px 18px;font-size:17px}.btn.sm{padding:6px 10px;font-size:13px}.btn:disabled{opacity:.45}.btn.block{width:100%}
+.badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:700;background:#eceae4;color:#444;white-space:nowrap}
+.badge.ok{background:var(--okbg);color:var(--ok)}.badge.warn{background:var(--warnbg);color:var(--warn)}.badge.bad{background:var(--badbg);color:var(--bad)}.badge.info{background:var(--infobg);color:var(--info)}.badge.dark{background:var(--dark);color:#fff}
+.alert{padding:10px 12px;border-radius:10px;margin:8px 0;border:1px solid}.alert.ok{background:var(--okbg);border-color:#86efac}.alert.warn{background:var(--warnbg);border-color:#fcd34d}.alert.bad{background:var(--badbg);border-color:#fca5a5}.alert.info{background:var(--infobg);border-color:#93c5fd}
+.status{border-radius:var(--r);padding:18px;text-align:center;color:#fff}.status.ok{background:var(--ok)}.status.warn{background:#c2410c}.status.bad{background:var(--bad)}.status.mut{background:#475569}.status b{font-size:26px;display:block}
+.step{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.step:last-child{border:0}
+.step .n{width:32px;height:32px;border-radius:50%;background:#e5e2da;display:grid;place-items:center;font-weight:800;flex:none}
+.step.done .n{background:var(--ok);color:#fff}.step.wait .n{background:var(--warn);color:#fff}.step.bad .n{background:var(--bad);color:#fff}.step>div:nth-child(2){flex:1}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:#fff}
+table{border-collapse:collapse;width:100%;font-size:13.5px}th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#f7f5f0;position:sticky;top:0;white-space:nowrap}
+.list>div{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.list>div:last-child{border:0}
+.combo{position:relative}.combo-box{display:flex}.combo-box input{border-radius:10px 0 0 10px}.combo-btn{border:1px solid #c9c4ba;border-left:0;background:#f4f2ed;border-radius:0 10px 10px 0;width:44px}
+.combo-list{position:absolute;left:0;right:0;top:100%;z-index:20;background:#fff;border:1px solid #b9b3a8;border-radius:10px;max-height:260px;overflow:auto;box-shadow:0 8px 24px #0003;margin-top:2px}
+.combo-item{padding:9px 12px;border-bottom:1px solid var(--line);cursor:pointer}.combo-item:hover{background:var(--infobg)}.combo-item small{display:block;color:var(--mut)}.combo-empty{padding:10px;color:var(--mut)}
+.qrbox{background:#fff;border:6px solid #fff;border-radius:16px;width:min(300px,80vw);margin:0 auto;box-shadow:0 2px 14px #0002}.qrbox svg{display:block;width:100%;height:auto}
+.camwrap{position:relative;border-radius:14px;overflow:hidden;background:#000;max-width:480px;margin:0 auto 10px}.camwrap video{width:100%;display:block}.aim{position:absolute;inset:18%;border:3px solid var(--brand);border-radius:16px}
+#banner .sosb{background:var(--bad);color:#fff;padding:10px 14px;position:sticky;top:56px;z-index:25;border-bottom:3px solid #7f1d1d}
+#banner .sosb.alarm{animation:blink 1s infinite}
+.modalbg{position:fixed;inset:0;background:#000a;z-index:100;display:grid;place-items:center;padding:14px;overflow:auto}
+.modal{background:#fff;border-radius:16px;padding:18px;width:min(560px,100%);max-height:94dvh;overflow:auto}.modal.wide{width:min(900px,100%)}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;z-index:200;display:grid;gap:6px;width:min(92vw,420px)}#toast div{background:var(--dark);color:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 4px 16px #0005}#toast .bad{background:var(--bad)}#toast .ok{background:var(--ok)}
+.login{max-width:420px;margin:0 auto;padding:30px 16px}.login .big{font-size:34px;font-weight:900}.login .big span{color:var(--brand)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{border:1px solid #c9c4ba;background:#fff;border-radius:99px;padding:5px 11px;font-size:13px;cursor:pointer}
+.bars{display:flex;gap:8px;align-items:flex-end;height:140px}.bars>div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;text-align:center;font-size:11px;color:var(--mut)}.bars i{display:block;width:100%}
+.thumb{max-width:100%;max-height:360px;border-radius:10px;border:1px solid var(--line);cursor:zoom-in}
+.prog{height:10px;background:#e5e2da;border-radius:6px;overflow:hidden}.prog i{display:block;height:100%;background:var(--brand);width:0}
+details summary{cursor:pointer;font-weight:600}
+@media print{header,nav,#banner,.noprint{display:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div><div id="modal"></div><div id="toast"></div>
+<noscript>This app needs JavaScript.</noscript>
+<script>
+'use strict';
+/* =============================== UTILITIES =============================== */
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,9);
+const dkey=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const todayKey=()=>dkey(new Date());
+const addDays=(k,n)=>{const[y,m,d]=k.split('-').map(Number);return dkey(new Date(y,m-1,d+n))};
+const fmtDT=i=>i?new Date(i).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}):'—';
+const fmtT=i=>i?new Date(i).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false}):'—';
+const fmtD=k=>{if(!k)return'—';const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})};
+const dur=ms=>{const s=Math.floor(Math.abs(ms)/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;return h?`${h}h ${pad(m)}m`:`${m}m ${pad(c)}s`};
+const hoursBetween=(a,b)=>((new Date(b)-new Date(a))/36e5).toFixed(2);
+const cap=s=>({employee:'Employee',supervisor:'Supervisor',manager:'Manager',vendor:'Vendor',system:'System'}[s]||s);
+const toLocalInput=d=>`${dkey(d)}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+function h53(str,seed=0){let h1=0xdeadbeef^seed,h2=0x41c6ce57^seed;for(let i=0,c;i<str.length;i++){c=str.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return(4294967296*(2097151&h2)+(h1>>>0)).toString(16).padStart(14,'0')}
+function lev(a,b){const m=[...Array(a.length+1)].map((_,i)=>[i]);for(let j=1;j<=b.length;j++)m[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return m[a.length][b.length]}
+function toast(msg,type=''){const d=document.createElement('div');d.className=type;d.textContent=msg;$('#toast').appendChild(d);setTimeout(()=>d.remove(),4200)}
+
+/* lazy-loaded libraries (need internet the first time) */
+const LIBS={jsqr:['https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js',()=>window.jsQR],qr:['https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js',()=>window.qrcode],xlsx:['https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',()=>window.XLSX],tesseract:['https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js',()=>window.Tesseract]};
+const _lp={};
+function loadLib(k){const[url,chk]=LIBS[k];if(chk())return Promise.resolve();return _lp[k]||(_lp[k]=new Promise((res,rej)=>{const s=document.createElement('script');s.src=url;s.onload=()=>chk()?res():rej(new Error('lib'));s.onerror=()=>{delete _lp[k];rej(new Error('Could not load '+k+' (are you online?)'))};document.head.appendChild(s)}))}
+
+/* image store (IndexedDB) for certificate photos */
+const idb=(()=>{try{return new Promise((res,rej)=>{const r=indexedDB.open('tg_imgs',1);r.onupgradeneeded=()=>r.result.createObjectStore('i');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}catch(e){return Promise.reject(e)}})();
+idb.catch(()=>{});
+const idbPut=async(k,v)=>{const db=await idb;return new Promise((res,rej)=>{const t=db.transaction('i','readwrite');t.objectStore('i').put(v,k);t.oncomplete=()=>res(true);t.onerror=()=>rej(t.error)})};
+const idbGet=async k=>{const db=await idb;return new Promise((res,rej)=>{const q=db.transaction('i').objectStore('i').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})};
+
+/* =============================== DATA LAYER ===============================
+   All data lives in the browser (localStorage). Everything goes through load()/save()/tx()
+   so it can later be swapped for a real server API without touching the screens. */
+const KEY='tunnelguard_v1';let S=null,LASTRAW=null;
+const SYS={id:'system',code:'SYSTEM',name:'System',role:'system'};
+const SKILL_LEVELS=['Trainee','Semi-skilled','Skilled','Advanced','Expert'];
+const SYMPTOMS=[['Chest pain or tightness','b'],['Shortness of breath','b'],['Dizziness or fainting','b'],['Fever or chills','r'],['Cough','r'],['Sore throat / runny nose','r'],['Severe headache','r'],['Nausea, vomiting or diarrhoea','r'],['Extreme tiredness','r'],['Muscle or joint pain','r'],['Eye, vision or hearing problem','r'],['Skin rash or infection','r']];
+const SOS_CATS=['Gas / ventilation failure','Ground collapse or instability','Flooding / water ingress','Fire or smoke','Injury / medical emergency','Equipment or TBM failure','Unsafe condition / near miss','Security threat','Other'];
+function defaults(){return{company:'TunnelGuard Tunnelling Co.',tempMax:37.5,sleepMin:6,restMin:8,certDays:30,minOcrConf:45,shiftHrs:10,graceMin:15,sosReasonMin:120,idleMin:15,demoMode:true,
+zones:['Portal / Shaft Bottom','TBM Face','Cross Passage A','Cross Passage B','Ventilation Shaft','Station Box','Segment Yard (surface)','Control Room'],
+skills:['TBM Operator','Tunnel Miner','Shotcrete Operator','Rock Bolter','Driller','Grouting Operator','Segment Erector','Surveyor','Electrician','Mechanic / Fitter','Crane / Hoist Operator','Ventilation Technician','Welder','Steel Fixer','Concrete Worker','Geotechnical Engineer','Safety Officer','General Labourer'],
+comps:['Tunnel Induction','Confined Space Entry','Working at Height','First Aid / CPR','Gas Detector Use','Self-Rescuer (SCSR) Training','Plant / Machinery Licence']}}
+function blank(){return{meta:{v:1,created:new Date().toISOString(),secret:uid()+uid()},settings:defaults(),users:[],decls:[],certs:[],att:[],qr:{},sos:[],incidents:[],audit:[],cnt:{employee:1000,supervisor:0,manager:0,vendor:0}}}
+function load(){LASTRAW=localStorage.getItem(KEY);try{S=JSON.parse(LASTRAW)}catch(e){S=null}if(!S)S=blank();S.settings={...defaults(),...S.settings}}
+function save(){LASTRAW=JSON.stringify(S);localStorage.setItem(KEY,LASTRAW)}
+function tx(fn){if(localStorage.getItem(KEY)!==LASTRAW)load();const r=fn();save();return r}
+const byId=id=>S.users.find(u=>u.id===id);
+const uname=id=>byId(id)?.name||'—';
+let SES=null;try{SES=JSON.parse(sessionStorage.getItem('tg_ses')||'null')}catch(e){}
+const cur=()=>SES&&S.users.find(u=>u.id===SES.uid&&u.active)||null;
+const isStaff=u=>u&&(u.role==='supervisor'||u.role==='manager');
+let _dev;const device=()=>_dev||(_dev=`${navigator.platform||'?'} | ${screen.width}x${screen.height} | ${(navigator.userAgent.match(/(Edg|Chrome|Firefox|Version)\/[\d.]+/)||['?'])[0]}`);
+
+/* Tamper-evident audit book: each entry carries the hash of the previous one. */
+function log(o){const a=o.actor||cur()||SYS,prev=S.audit.length?S.audit[S.audit.length-1].hash:'GENESIS';
+const e={seq:S.audit.length+1,ts:new Date().toISOString(),actorId:a.id,actorCode:a.code||'',actorName:a.name,actorRole:a.role,action:o.action,cat:o.cat||'general',targetType:o.target?.type||'',targetId:o.target?.code||o.target?.id||'',targetName:o.target?.name||'',detail:o.detail||'',before:o.before??'',after:o.after??'',approval:o.approval||null,device:device(),prev};
+e.hash=h53(prev+JSON.stringify(e));S.audit.push(e);return e}
+function verifyChain(){let prev='GENESIS';for(const e of S.audit){const{hash,...r}=e;if(r.prev!==prev||h53(prev+JSON.stringify(r))!==hash)return{ok:false,seq:e.seq};prev=hash}return{ok:true,n:S.audit.length}}
+const APPR=(decision,by,role,method,note='')=>({decision,by,byRole:role,method,note});
+const tgt=(type,x)=>({type,id:x.id,code:x.code,name:x.name});
+
+/* =============================== USERS =============================== */
+const pinHash=(pin,salt)=>h53(salt+':'+pin+':'+S.meta.secret);
+function nextCode(role){const p={employee:'TG-',supervisor:'SUP-',manager:'MGR-',vendor:'VEN-'}[role];S.cnt[role]=(S.cnt[role]||0)+1;return p+String(S.cnt[role]).padStart(role==='employee'?4:3,'0')}
+function addUser(o,pin,must=true){const salt=uid();const u={id:uid(),code:nextCode(o.role),role:o.role,name:o.name.trim(),email:(o.email||'').trim(),phone:o.phone||'',address:o.address||'',skill:o.skill||'',level:o.level||'',company:o.company||'',dob:o.dob||'',emergency:o.emergency||{name:'',phone:''},blood:o.blood||'',comps:o.comps||{},active:true,salt,pinHash:pinHash(pin,salt),mustChange:must,consent:null,failed:0,lockedUntil:0,created:new Date().toISOString(),createdBy:o.createdBy||'system'};S.users.push(u);return u}
+const expiredComps=(u,d=todayKey())=>Object.entries(u.comps||{}).filter(([k,v])=>v&&v<d).map(([k])=>k);
+const companies=()=>[...new Set(S.users.filter(u=>u.company).map(u=>u.company))].sort();
+
+/* =============================== CLEARANCE ENGINE =============================== */
+function evalDecl(a){const st=S.settings,F=[];const add=(sev,msg)=>F.push({sev,msg});
+if(a.temp>=st.tempMax)add('block',`Temperature ${a.temp}°C is at/above the ${st.tempMax}°C limit`);else if(a.temp<35)add('review',`Temperature ${a.temp}°C unusually low – re-measure`);
+a.symptoms.forEach(s=>{const c=SYMPTOMS.find(x=>x[0]===s);add(c&&c[1]==='b'?'block':'review','Symptom: '+s)});
+if(a.alcohol==='yes')add('block','Alcohol or recreational drugs in last 24h');
+if(a.alert==='no')add('block','Does not feel mentally alert / fit to work safely');
+if(a.meds==='yes')add('review','Taking medication that may cause drowsiness');
+if(a.illness==='yes')add('review','Recent illness, injury or hospital visit');
+if(a.contact==='yes')add('review','Contact with infectious case in last 14 days');
+if(a.sleep<st.sleepMin)add('review',`Only ${a.sleep}h sleep (minimum ${st.sleepMin}h)`);
+if(a.stress>=4)add('review',`High stress/fatigue self-rating (${a.stress}/5)`);
+if(a.rest<st.restMin)add('review',`Only ${a.rest}h rest since last shift (minimum ${st.restMin}h)`);
+return{flags:F,result:F.some(f=>f.sev==='block')?'block':F.length?'review':'ok'}}
+const declFor=(uid,d)=>{const a=S.decls.filter(x=>x.userId===uid&&x.date===d);return a[a.length-1]||null};
+const declState=x=>!x?'none':x.result==='ok'?'ok':x.review?(x.review.decision==='approved'?'ok':'denied'):x.result==='block'?'blocked':'pending';
+const cdate=c=>c.final?.date||c.ocr?.date||dkey(new Date(c.uploadedAt));
+const ceff=c=>({date:cdate(c),clinic:c.final?.clinic||c.ocr?.clinic||'',fitness:c.final?.fitness||c.ocr?.fitness||''});
+function certInfo(uid,d){const vd=S.settings.certDays,all=S.certs.filter(c=>c.userId===uid);
+const good=all.filter(c=>['auto_approved','manual_approved'].includes(c.status)&&ceff(c).fitness==='fit'&&cdate(c)<=d).sort((a,b)=>cdate(b).localeCompare(cdate(a)));
+const unf=all.filter(c=>c.status==='unfit'&&cdate(c)<=d&&cdate(c)>=addDays(d,-vd)).sort((a,b)=>cdate(b).localeCompare(cdate(a)))[0];
+const pend=all.filter(c=>c.status==='pending_review');const best=good[0];
+if(unf&&(!best||cdate(unf)>=cdate(best)))return{state:'unfit',cert:unf};
+if(pend.length)return{state:'pending',cert:pend[pend.length-1]};
+if(best){const until=addDays(cdate(best),vd);return{state:until>=d?'ok':'expired',cert:best,until}}
+return{state:'none',cert:all[all.length-1]||null}}
+function clearanceFor(uid,d=todayKey()){const x=declFor(uid,d),ds=declState(x),ci=certInfo(uid,d),R=[];let st;
+if(ds==='blocked'||ds==='denied'||ci.state==='unfit')st='not_cleared';else if(ds==='pending'||ci.state==='pending')st='pending';else if(ds==='none'||ci.state==='none'||ci.state==='expired')st='incomplete';else st='cleared';
+if(ds==='none')R.push('Daily health declaration not submitted');
+if(ds==='blocked')R.push('Declaration failed: '+x.flags.filter(f=>f.sev==='block').map(f=>f.msg).join('; '));
+if(ds==='denied')R.push('Declaration denied by '+x.review.byName);
+if(ds==='pending')R.push('Declaration awaiting supervisor review');
+if(ci.state==='none')R.push('No medical certificate on file');
+if(ci.state==='expired')R.push('Medical certificate expired on '+fmtD(ci.until));
+if(ci.state==='pending')R.push('Medical certificate awaiting supervisor verification');
+if(ci.state==='unfit')R.push('Medical certificate says NOT fit for work');
+return{status:st,decl:x,ds,ci,reasons:R}}
+const ST={cleared:['✅ Cleared','ok'],pending:['⏳ Pending review','warn'],not_cleared:['⛔ Not cleared','bad'],incomplete:['📝 Incomplete','mut']};
+const VST={cleared:'Fit for work',pending:'Verification pending',not_cleared:'Not cleared',incomplete:'Not yet submitted'};
+const badge=(t,c='')=>`<span class="badge ${c}">${t}</span>`;
+const stBadge=s=>badge(ST[s][0],ST[s][1]==='mut'?'':ST[s][1]);
+const openAtt=id=>S.att.find(a=>a.userId===id&&!a.exitAt);
+const isOverdue=a=>!a.exitAt&&Date.now()>new Date(a.plannedExit).getTime()+S.settings.graceMin*6e4;
+const activeSOS=()=>S.sos.find(s=>s.status==='active')||null;
+function reviewQueue(){const t=addDays(todayKey(),-1);return{certs:S.certs.filter(c=>c.status==='pending_review'),decls:S.decls.filter(x=>x.date>=t&&x.result==='review'&&!x.review),blocked:S.decls.filter(x=>x.date>=t&&x.result==='block'&&!x.review)}}
+function pendingCount(u){const q=reviewQueue();return q.certs.length+q.decls.length+(u.role==='manager'?q.blocked.length:0)}
+
+/* =============================== CERTIFICATE READING (OCR) =============================== */
+const MON={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+function okDate(y,m,d){const t=new Date(y,m-1,d);return t.getFullYear()===y&&t.getMonth()===m-1&&t.getDate()===d&&y>=2000&&y<=2100?`${y}-${pad(m)}-${pad(d)}`:null}
+function findDates(line){const out=[];let m;
+const r1=/\b(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})\b/g;while(m=r1.exec(line)){let a=+m[1],b=+m[2],y=+m[3];if(y<100)y+=2000;let d=a,mo=b;if(a<=12&&b>12){mo=a;d=b}const k=okDate(y,mo,d);if(k)out.push(k)}
+const r2=/\b(20\d{2})[\/\-.](\d{1,2})[\/\-.](\d{1,2})\b/g;while(m=r2.exec(line)){const k=okDate(+m[1],+m[2],+m[3]);if(k)out.push(k)}
+const r3=/\b(\d{1,2})(?:st|nd|rd|th)?[\s\-,.]*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*[\s\-,.]*(\d{2,4})\b/gi;while(m=r3.exec(line)){let y=+m[3];if(y<100)y+=2000;const k=okDate(y,MON[m[2].toLowerCase()]+1,+m[1]);if(k)out.push(k)}
+const r4=/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})\b/gi;while(m=r4.exec(line)){const k=okDate(+m[3],MON[m[1].toLowerCase()]+1,+m[2]);if(k)out.push(k)}
+return[...new Set(out)]}
+function parseCert(raw,user){const text=String(raw||'').replace(/\r/g,''),lines=text.split('\n').map(l=>l.trim()).filter(Boolean),low=text.toLowerCase().replace(/\s+/g,' ');
+/* fitness */
+let fitness=null;
+if(/\bun\s?fit\b|\bnot\s+(medically\s+)?fit\b|\bnot\s+(able|fit)\s+to\s+work\b|\bmedical\s+leave\b|\bmc\s*(for|:)?\s*\d+\s*day/.test(low))fitness='unfit';
+else if(/\b(fit|able)\b[^.]{0,40}\b(restriction|restricted|light\s+dut|limited\s+dut|modified\s+dut|with\s+condition)/.test(low))fitness='restricted';
+else if(/\bfit\s+(for|to)\s+(work|duty|all\s+work|normal\s+dut|tunnel|safety|employment)|\b(is|are|was)\s+fit\b|\bcertified\s+fit\b|\bfitness\s*(status)?\s*[:\-]?\s*fit\b|\bfit\s+to\s+(resume|return)/.test(low))fitness='fit';
+/* date */
+let best=null,bestScore=0,tie=false;
+lines.forEach((l,i)=>{if(/birth|dob|d\.o\.b|born|nric|passport|expir|valid\s+until|next\s+review|review\s+date/i.test(l))return;let ds=findDates(l);let sc=1;
+if(!ds.length&&/appointment|consult|visit|examin|date|issued/i.test(l)&&lines[i+1])ds=findDates(lines[i+1]);
+if(!ds.length)return;if(/appointment|consult|visit|examin|assessed/i.test(l))sc=3;else if(/date|issued|dated/i.test(l))sc=2;
+ds.forEach(d=>{if(sc>bestScore){best=d;bestScore=sc;tie=false}else if(sc===bestScore&&d!==best)tie=true})});
+const date=best&&!(tie&&bestScore<3)?best:null;
+/* clinic */
+let clinic=null;const cre=/clinic|medical\s+(centre|center|group|practice|services)|hospital|polyclinic|surgery|health\s*care|health\s+(centre|center)|doctors?\s+(group|clinic)|occupational\s+health/i;
+for(const l of lines){if(cre.test(l)&&l.length>=4){clinic=l.replace(/^(clinic|name of clinic|issued by|clinic name)\s*[:\-]\s*/i,'').replace(/[^\x20-\x7E]/g,'').slice(0,90).trim();if(clinic.length>=3)break;clinic=null}}
+/* patient name */
+const toks=user.name.toLowerCase().split(/[^a-z]+/).filter(t=>t.length>=3),words=[...new Set(low.split(/[^a-z]+/).filter(w=>w.length>=3))];
+const matched=toks.filter(t=>words.includes(t)||(t.length>=5&&words.some(w=>Math.abs(w.length-t.length)<=1&&lev(w,t)<=1))).length;
+return{date,clinic,fitness,nameMatch:toks.length?matched>=Math.ceil(toks.length/2):false,matched,tokens:toks.length}}
+function decideCert(p,conf,len,user,imgHash){const st=S.settings,I=[],today=todayKey();
+const unread=len<40||conf<st.minOcrConf;if(unread)I.push('Image not clearly readable');
+if(!p.date)I.push('Appointment date not found');if(!p.clinic)I.push('Clinic name not found');if(!p.fitness)I.push('Fitness statement not found');
+if(p.fitness==='restricted')I.push('Fit with restrictions – supervisor must verify');
+if(!p.nameMatch)I.push('Patient name does not match '+user.name);
+if(imgHash&&S.certs.some(c=>c.userId!==user.id&&c.imgHash===imgHash))I.push('This exact image was already used by another employee');
+if(p.date&&p.date>today)I.push('Certificate date is in the future');
+let status;
+if(p.fitness==='unfit')status='unfit';
+else if(p.date&&p.date<addDays(today,-st.certDays)&&!unread){status='rejected';I.unshift(`Certificate is older than ${st.certDays} days – upload a recent one`)}
+else status=I.length?'pending_review':'auto_approved';
+return{status,issues:I}}
+const CSTAT={auto_approved:['✅ Auto-approved','ok'],manual_approved:['✅ Approved by supervisor','ok'],pending_review:['⏳ Awaiting supervisor','warn'],rejected:['❌ Rejected – upload again','bad'],unfit:['⛔ Unfit for work','bad']};
+
+/* =============================== COMBO (searchable dropdown) =============================== */
+const COMBO_CB={};
+function combo(id,users,o={}){COMBO_CB[id]=o.cb;const s=o.sel&&byId(o.sel);
+return`<div class="combo" data-combo="${id}"><div class="combo-box"><input class="combo-in" type="text" autocomplete="off" placeholder="${esc(o.ph||'Search name, ID, skill…')}" value="${esc(s?s.name:'')}"><button type="button" class="combo-btn" tabindex="-1">▾</button></div><input type="hidden" class="combo-val" name="${id}" value="${esc(o.sel||'')}"><div class="combo-list" hidden>${users.map(u=>`<div class="combo-item" data-id="${u.id}" data-s="${esc((u.name+' '+u.code+' '+u.role+' '+u.skill+' '+u.company).toLowerCase())}"><b>${esc(u.name)}</b><small>${esc(u.code)} · ${cap(u.role)}${u.skill?' · '+esc(u.skill):''}${u.company?' · '+esc(u.company):''}</small></div>`).join('')}<div class="combo-empty" hidden>No match</div></div></div>`}
+function comboFilter(c){const q=$('.combo-in',c).value.trim().toLowerCase();let n=0;$$('.combo-item',c).forEach(i=>{const v=!q||i.dataset.s.includes(q);i.hidden=!v;if(v)n++});$('.combo-empty',c).hidden=n>0;$('.combo-list',c).hidden=false}
+document.addEventListener('focusin',e=>{if(e.target.matches('.combo-in')){const c=e.target.closest('.combo');e.target.select();$$('.combo-item',c).forEach(i=>i.hidden=false);$('.combo-empty',c).hidden=true;$('.combo-list',c).hidden=false}});
+document.addEventListener('input',e=>{if(e.target.matches('.combo-in')){const c=e.target.closest('.combo');$('.combo-val',c).value='';comboFilter(c)}});
+document.addEventListener('click',e=>{const it=e.target.closest('.combo-item');
+if(it){const c=it.closest('.combo');$('.combo-in',c).value=$('b',it).textContent;$('.combo-val',c).value=it.dataset.id;$('.combo-list',c).hidden=true;COMBO_CB[c.dataset.combo]?.(it.dataset.id);return}
+const b=e.target.closest('.combo-btn');if(b){const c=b.closest('.combo'),l=$('.combo-list',c);if(l.hidden){$$('.combo-item',c).forEach(i=>i.hidden=false);l.hidden=false}else l.hidden=true;return}
+if(!e.target.closest('.combo'))$$('.combo-list').forEach(l=>l.hidden=true)});
+
+/* =============================== MODAL / EVENTS =============================== */
+function modal(html,wide=false){$('#modal').innerHTML=`<div class="modalbg"><div class="modal ${wide?'wide':''}">${html}</div></div>`}
+function closeModal(){$('#modal').innerHTML=''}
+const ACT={},FORMS={},VIEWS={},AFTER={};
+document.addEventListener('click',e=>{const t=e.target.closest('[data-act]');if(t&&ACT[t.dataset.act]){activity();ACT[t.dataset.act](t.dataset,t,e)}});
+document.addEventListener('submit',e=>{const f=e.target.closest('form[data-form]');if(f){e.preventDefault();activity();FORMS[f.dataset.form]?.(f,new FormData(f),e.submitter)}});
+document.addEventListener('change',e=>{if(e.target.id==='certFile')onCertFile(e.target.files[0]);if(e.target.id==='restoreFile')doRestore(e.target.files[0])});
+document.addEventListener('input',e=>{if(e.target.id==='stopWord'){const b=$('#stopGo');if(b)b.disabled=e.target.value.trim().toUpperCase()!=='STOP'}});
+const activity=()=>{if(SES){SES.last=Date.now();sessionStorage.setItem('tg_ses',JSON.stringify(SES))}};
+
+/* =============================== ROUTING / SHELL =============================== */
+let VIEW=null,GATE=null;
+const NAV={
+employee:[['today','🏠','Today'],['declare','🩺','Health'],['cert','📄','Certificate'],['pass','🔳','QR Pass'],['history','🕘','History']],
+supervisor:[['dash','📊','Site'],['scan','📷','Gate'],['inside','🚇','In Tunnel'],['reviews','✅','Reviews'],['people','👥','People'],['safety','🛑','Safety'],['audit','📒','Audit'],['reports','📤','Reports']],
+manager:[['dash','📊','Site'],['scan','📷','Gate'],['inside','🚇','In Tunnel'],['reviews','✅','Reviews'],['people','👥','People'],['safety','🛑','Safety'],['audit','📒','Audit'],['reports','📤','Reports'],['settings','⚙️','Settings']],
+vendor:[['vwork','👷','My workers'],['vatt','🗓️','Attendance']]};
+function go(v){VIEW=v;stopCam();if(v!=='scan')GATE=null;render();window.scrollTo(0,0)}
+function render(){const app=$('#app');if(!S.users.length){app.innerHTML=setupHTML();return}
+const u=cur();if(!u){SES=null;app.innerHTML=loginHTML();return}
+if(u.mustChange){app.innerHTML=pinHTML(true);return}
+if(!u.consent){app.innerHTML='';consentModal();return}
+const nav=NAV[u.role];if(!nav.find(n=>n[0]===VIEW))VIEW=nav[0][0];
+const sosBtn=u.role!=='vendor'?`<button class="sosbtn ${activeSOS()?'on':''}" data-act="sosStart">🛑 STOP WORK</button>`:'';
+const badgeFor=id=>id==='reviews'&&isStaff(u)&&pendingCount(u)?`<span class="dot">${pendingCount(u)}</span>`:id==='inside'&&isStaff(u)&&S.att.some(isOverdue)?`<span class="dot">!</span>`:'';
+app.innerHTML=`<div class="app"><header><div class="logo">Tunnel<span>Guard</span></div>${sosBtn}<div class="who"><b>${esc(u.name)}</b><small>${cap(u.role)} · ${esc(u.code)}</small></div><button class="btn sm" data-act="menu">☰</button></header><div id="banner"></div><nav>${nav.map(n=>`<button class="${n[0]===VIEW?'on':''}" data-act="go" data-v="${n[0]}"><i>${n[1]}</i>${n[2]}${badgeFor(n[0])}</button>`).join('')}</nav><main>${VIEWS[VIEW](u)}</main></div>`;
+AFTER[VIEW]?.(u);loadImgs();bannerSig='';renderBanner()}
+ACT.go=d=>go(d.v);
+ACT.menu=()=>{const u=cur();modal(`<h3>${esc(u.name)}</h3><p class="mut">${cap(u.role)} · ${esc(u.code)}${u.company?' · '+esc(u.company):''}</p><div class="grid"><button class="btn" data-act="chPin">🔑 Change PIN</button><button class="btn" data-act="closeModal">Close</button><button class="btn bad" data-act="logout">Sign out</button></div>`)};
+ACT.closeModal=closeModal;
+ACT.chPin=()=>modal(pinHTML(false));
+function onExternalChange(){load();renderBanner();if(CAM.active||$('#modal').innerHTML.trim())return;if(document.activeElement&&document.activeElement.matches('input,textarea,select'))return;if(['declare','cert'].includes(VIEW))return;render()}
+window.addEventListener('storage',e=>{if(e.key===KEY)onExternalChange()});
+
+/* =============================== AUTH =============================== */
+function setupHTML(){return`<div class="login"><div class="big">Tunnel<span>Guard</span></div><p class="mut">First-time setup. Create the first Manager account.</p><form class="card" data-form="setup"><label>Organisation name<input type="text" name="company" required value="TunnelGuard Tunnelling Co."></label><label>Your full name<input type="text" name="name" required></label><label>Email<input type="email" name="email" required></label><label>Choose a PIN (6 digits)<input type="password" name="pin" inputmode="numeric" pattern="\\d{6}" maxlength="6" required></label><br><button class="btn primary lg block">Create & continue</button></form><button class="btn block" data-act="loadDemo">Load demo data instead</button></div>`}
+function loginHTML(){const demo=S.settings.demoMode?`<div class="card"><h3>Demo accounts <span class="mut small">(PIN 1234)</span></h3>${['manager','supervisor','employee','vendor'].map(r=>`<div class="small mut" style="margin-top:6px">${cap(r)}</div><div class="chips">${S.users.filter(u=>u.role===r&&u.active).map(u=>`<span class="chip" data-act="fill" data-code="${esc(u.code)}">${esc(u.name)}</span>`).join('')}</div>`).join('')}<p class="small mut">Tip: open the app in two browser tabs as different roles to see Stop-Work alerts appear on both.</p></div>`:'';
+return`<div class="login"><div class="big">Tunnel<span>Guard</span></div><p class="mut">Fit-for-work clearance for tunnelling operations</p><form class="card" data-form="login"><label>Employee ID or email<input type="text" name="id" id="loginId" required autocapitalize="off" autocomplete="username"></label><label>PIN<input type="password" name="pin" id="loginPin" inputmode="numeric" required autocomplete="current-password"></label><br><button class="btn primary lg block">Sign in</button></form>${demo}</div>`}
+ACT.fill=d=>{$('#loginId').value=d.code;$('#loginPin').value='1234';$('#loginPin').focus()};
+function pinHTML(first){return`<div class="${first?'login':''}"><form class="${first?'card':''}" data-form="pin"><h3>${first?'Set your own PIN':'Change PIN'}</h3>${first?'<p class="mut">You are using a temporary PIN. Choose a new 6-digit PIN to continue.</p>':''}${first?'':'<label>Current PIN<input type="password" name="old" inputmode="numeric" required></label>'}<label>New PIN (6 digits)<input type="password" name="pin" inputmode="numeric" pattern="\\d{6}" maxlength="6" required></label><label>Repeat new PIN<input type="password" name="pin2" inputmode="numeric" pattern="\\d{6}" maxlength="6" required></label><br><button class="btn primary block">Save PIN</button></form></div>`}
+FORMS.setup=(f,fd)=>{S=blank();S.settings.company=fd.get('company');const u=tx(()=>{const x=addUser({role:'manager',name:fd.get('name'),email:fd.get('email'),createdBy:'setup'},fd.get('pin'),false);x.consent=null;log({action:'SYSTEM_SETUP',cat:'system',actor:x,detail:'Organisation created: '+fd.get('company')});return x});SES={uid:u.id,last:Date.now()};activity();VIEW=null;render()};
+ACT.loadDemo=()=>{seedDemo();render();toast('Demo data loaded. PIN for all demo accounts is 1234.','ok')};
+FORMS.login=(f,fd)=>{const key=String(fd.get('id')).trim().toLowerCase(),pin=String(fd.get('pin')).trim();load();
+const u=S.users.find(x=>x.code.toLowerCase()===key||(x.email&&x.email.toLowerCase()===key));
+if(!u){tx(()=>log({action:'LOGIN_FAILED',cat:'auth',actor:SYS,detail:'Unknown ID/email: '+key}));return toast('Invalid ID or PIN','bad')}
+if(!u.active){tx(()=>log({action:'LOGIN_BLOCKED',cat:'auth',actor:SYS,target:tgt('user',u),detail:'Deactivated account tried to sign in'}));return toast('This account is deactivated. Contact your supervisor.','bad')}
+if(u.lockedUntil&&Date.now()<u.lockedUntil)return toast('Too many attempts. Try again in '+dur(u.lockedUntil-Date.now()),'bad');
+if(pinHash(pin,u.salt)!==u.pinHash){tx(()=>{const U=byId(u.id);U.failed=(U.failed||0)+1;let d='Wrong PIN ('+U.failed+')';if(U.failed>=5){U.lockedUntil=Date.now()+6e5;U.failed=0;d+=' – account locked for 10 minutes'}log({action:'LOGIN_FAILED',cat:'auth',actor:SYS,target:tgt('user',U),detail:d})});return toast('Invalid ID or PIN','bad')}
+tx(()=>{const U=byId(u.id);U.failed=0;U.lockedUntil=0;log({action:'LOGIN',cat:'auth',actor:U,detail:'Signed in'})});
+SES={uid:u.id,last:Date.now()};activity();VIEW=null;render();if(u.role==='employee')loadLib('qr').catch(()=>{})};
+FORMS.pin=(f,fd)=>{const u=cur(),p=fd.get('pin'),first=u.mustChange;if(!first&&pinHash(String(fd.get('old')),u.salt)!==u.pinHash)return toast('Current PIN is wrong','bad');if(p!==fd.get('pin2'))return toast('PINs do not match','bad');if(/^(\d)\1{5}$/.test(p)||p==='123456')return toast('Choose a less obvious PIN','bad');
+tx(()=>{const U=byId(u.id);U.salt=uid();U.pinHash=pinHash(p,U.salt);U.mustChange=false;log({action:'PIN_CHANGED',cat:'auth',target:tgt('user',U),detail:first?'First-login PIN set':'PIN changed by user'})});closeModal();toast('PIN updated','ok');render()};
+ACT.logout=()=>{const u=cur();if(u)tx(()=>log({action:'LOGOUT',cat:'auth',actor:u,detail:'Signed out'}));SES=null;sessionStorage.removeItem('tg_ses');stopCam();closeModal();GATE=null;render()};
+function consentModal(){modal(`<h3>Health-data privacy notice</h3><p>TunnelGuard collects daily health declarations, medical certificates, attendance times and your location in the tunnel for <b>workplace safety, emergency response and legal compliance</b>.</p><ul><li>Health details are visible only to supervisors and managers. Vendors see only a fit / not-fit status.</li><li>Every access and decision is recorded in a tamper-evident audit book.</li><li>Data is retained per company policy and applicable data-protection law (e.g. PDPA / GDPR).</li></ul><div class="row"><button class="btn primary sp" data-act="consentYes">I understand & accept</button><button class="btn" data-act="logout">Decline & sign out</button></div>`)}
+ACT.consentYes=()=>{const u=cur();tx(()=>{const U=byId(u.id);U.consent=new Date().toISOString();log({action:'CONSENT_ACCEPTED',cat:'auth',target:tgt('user',U),detail:'Accepted health-data privacy notice'})});closeModal();render()};
+setInterval(()=>{const u=cur();if(u&&SES&&Date.now()-SES.last>S.settings.idleMin*6e4){tx(()=>log({action:'AUTO_LOGOUT',cat:'auth',actor:u,detail:'Signed out after inactivity'}));SES=null;sessionStorage.removeItem('tg_ses');stopCam();render();toast('Signed out due to inactivity')}},30000);
+
+/* =============================== STOP-WORK (SOS) =============================== */
+let bannerSig='',alarmT=null,actx=null;
+function renderBanner(){const el=$('#banner');if(!el)return;const u=cur(),s=activeSOS();
+if(!u||!s){if(el.innerHTML)el.innerHTML='';bannerSig='';stopAlarm();return}
+const acked=s.acks.some(a=>a.userId===u.id),over=!s.reason&&Date.now()>new Date(s.reasonDueAt).getTime(),canReason=!s.reason&&(s.by===u.id||isStaff(u));
+const sig=[s.id,acked,!!s.reason,over,u.role].join('|');
+if(sig!==bannerSig){bannerSig=sig;const raiser=u.role==='vendor'?'':` · raised by <b>${esc(s.byName)}</b>`;
+el.innerHTML=`<div class="sosb ${acked?'':'alarm'}"><div><b>🛑 STOP WORK ACTIVE</b> since ${fmtT(s.at)}${raiser}${s.location?' · '+esc(s.location):''}</div><div class="small">${u.role==='vendor'?'Do not dispatch personnel to site until further notice.':s.reason?'Reason recorded: '+esc(s.cat):'<span id="sosCd"></span>'}</div><div class="row" style="margin-top:6px">${acked?'<span class="badge dark">You acknowledged ✓</span>':'<button class="btn sm" data-act="sosAck">✔ Acknowledge</button>'}${canReason?'<button class="btn sm primary" data-act="sosReason">Provide reason</button>':''}${u.role!=='vendor'?'<button class="btn sm" data-act="go" data-v="'+(isStaff(u)?'safety':'today')+'">Open</button>':''}</div></div>`}
+updateCd();if(!acked)startAlarm();else stopAlarm()}
+function updateCd(){const s=activeSOS(),c=$('#sosCd');if(!s||!c)return;const left=new Date(s.reasonDueAt)-Date.now();c.innerHTML=left>0?`Reason must be provided within <b>${dur(left)}</b>`:`<b>⚠ REASON OVERDUE by ${dur(left)}</b>`}
+function startAlarm(){if(alarmT)return;const beep=()=>{try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();const o=actx.createOscillator(),g=actx.createGain();o.type='square';o.frequency.value=880;g.gain.value=.15;o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.35)}catch(e){}try{navigator.vibrate&&navigator.vibrate([300,150,300])}catch(e){}};beep();alarmT=setInterval(beep,2000)}
+function stopAlarm(){clearInterval(alarmT);alarmT=null}
+ACT.sosStart=()=>{if(activeSOS()){toast('Stop-work is already active');return go(isStaff(cur())?'safety':'today')}
+modal(`<h3 style="color:var(--bad)">🛑 Raise STOP WORK?</h3><p>This will immediately:</p><ul><li>alert <b>every user on every device</b> with an alarm,</li><li>block all new tunnel entries,</li><li>start a <b>${S.settings.sosReasonMin/60}-hour</b> timer for you to record the reason.</li></ul><div class="row"><button class="btn bad sp lg" data-act="sosStep2">Yes, continue</button><button class="btn" data-act="closeModal">Cancel</button></div>`)};
+ACT.sosStep2=()=>modal(`<h3 style="color:var(--bad)">Final confirmation</h3><form data-form="sos"><label>Where? (optional)<select name="loc"><option value="">— not sure —</option>${S.settings.zones.map(z=>`<option>${esc(z)}</option>`).join('')}</select></label><label>Type <b>STOP</b> to confirm</label><input type="text" id="stopWord" autocomplete="off" autocapitalize="characters"><br><div class="row"><button class="btn bad sp lg" id="stopGo" disabled>RAISE STOP WORK NOW</button><button type="button" class="btn" data-act="closeModal">Cancel</button></div></form>`);
+FORMS.sos=(f,fd)=>{if(String(fd.get('loc')||'')===null)return;const u=cur();let dup=false;
+tx(()=>{if(activeSOS()){dup=true;return}const inside=S.att.filter(a=>!a.exitAt).map(a=>a.userId);const s={id:uid(),by:u.id,byName:u.name,byRole:u.role,at:new Date().toISOString(),location:fd.get('loc')||'',reasonDueAt:new Date(Date.now()+S.settings.sosReasonMin*6e4).toISOString(),reason:'',cat:'',actions:'',reasonAt:null,reasonLate:false,acks:[{userId:u.id,at:new Date().toISOString()}],status:'active',snapshot:inside,muster:{},overdueLogged:false};S.sos.push(s);
+log({action:'SOS_RAISED',cat:'sos',actor:u,target:{type:'sos',id:s.id,name:'Stop work'},detail:`Stop-work raised${s.location?' at '+s.location:''}. ${inside.length} people were inside the tunnel. Reason due by ${fmtDT(s.reasonDueAt)}`})});
+closeModal();if(!dup){toast('STOP WORK raised – everyone has been alerted','bad');ACT.sosReason()}render()};
+ACT.sosAck=()=>{const u=cur();tx(()=>{const s=activeSOS();if(s&&!s.acks.some(a=>a.userId===u.id)){s.acks.push({userId:u.id,at:new Date().toISOString()});log({action:'SOS_ACKNOWLEDGED',cat:'sos',target:{type:'sos',id:s.id,name:'Stop work'},detail:'Alert acknowledged'})}});bannerSig='';render()};
+ACT.sosReason=()=>{const s=activeSOS();if(!s||s.reason)return;modal(`<h3>Reason for stop-work</h3><p class="mut">Required within ${S.settings.sosReasonMin/60} hours of the alert (by ${fmtDT(s.reasonDueAt)}).</p><form data-form="sosReason"><label>Category<select name="cat" required><option value="">Select…</option>${SOS_CATS.map(c=>`<option>${c}</option>`).join('')}</select></label><label>What happened / what was observed? (min 20 characters)<textarea name="reason" required minlength="20"></textarea></label><label>Immediate actions taken<textarea name="actions"></textarea></label><br><div class="row"><button class="btn primary sp">Save reason</button><button type="button" class="btn" data-act="closeModal">Later</button></div></form>`)};
+FORMS.sosReason=(f,fd)=>{const u=cur();tx(()=>{const s=activeSOS();if(!s)return;s.reason=fd.get('reason');s.cat=fd.get('cat');s.actions=fd.get('actions');s.reasonAt=new Date().toISOString();s.reasonBy=u.id;s.reasonByName=u.name;s.reasonLate=new Date(s.reasonAt)>new Date(s.reasonDueAt);
+log({action:'SOS_REASON_RECORDED',cat:'sos',target:{type:'sos',id:s.id,name:'Stop work'},detail:`${s.cat}: ${s.reason} | Actions: ${s.actions||'—'} | ${s.reasonLate?'LATE – after deadline':'within deadline'}`})});closeModal();bannerSig='';render()};
+ACT.sosLift=()=>{const s=activeSOS();if(!s)return;if(!s.reason)return toast('Record the reason first','bad');modal(`<h3>Lift stop-work</h3><form data-form="sosLift"><label>Resolution / safety verification notes<textarea name="note" required minlength="10"></textarea></label><label class="chk"><input type="checkbox" name="safe" required> I confirm the area has been inspected and declared safe</label><br><div class="row"><button class="btn ok sp">Lift stop-work</button><button type="button" class="btn" data-act="closeModal">Cancel</button></div></form>`)};
+FORMS.sosLift=(f,fd)=>{const u=cur();if(u.role!=='manager')return toast('Only a Manager can lift stop-work','bad');tx(()=>{const s=activeSOS();if(!s)return;s.status='resolved';s.resolvedAt=new Date().toISOString();s.resolvedBy=u.id;s.resolvedByName=u.name;s.resolution=fd.get('note');log({action:'SOS_LIFTED',cat:'sos',target:{type:'sos',id:s.id,name:'Stop work'},detail:'Stop-work lifted. '+fd.get('note'),approval:APPR('approved',u.name,u.role,'manual',fd.get('note'))})});closeModal();toast('Stop-work lifted','ok');render()};
+ACT.muster=d=>{const u=cur();tx(()=>{const s=S.sos.find(x=>x.id===d.s);if(!s)return;if(s.muster[d.u]){delete s.muster[d.u];log({action:'MUSTER_UNMARKED',cat:'sos',target:tgt('user',byId(d.u)),detail:'Removed from accounted-for list'})}else{s.muster[d.u]={at:new Date().toISOString(),by:u.name,how:'Marked by '+u.name};log({action:'MUSTER_ACCOUNTED',cat:'sos',target:tgt('user',byId(d.u)),detail:'Person accounted for during stop-work'})}});render()};
+
+/* =============================== BACKGROUND CHECKS =============================== */
+function tickChecks(){const u=cur();if(!u||!isStaff(u))return;if(localStorage.getItem(KEY)!==LASTRAW)load();let ch=false;
+S.att.filter(a=>isOverdue(a)&&!a.overdueLogged).forEach(a=>{a.overdueLogged=true;ch=true;log({action:'OVERDUE_EXIT',cat:'attendance',actor:SYS,target:tgt('user',byId(a.userId)||{}),detail:`Not out by planned exit ${fmtDT(a.plannedExit)} (+${S.settings.graceMin} min grace) – ${a.zone}`})});
+const s=activeSOS();if(s&&!s.reason&&!s.overdueLogged&&Date.now()>new Date(s.reasonDueAt)){s.overdueLogged=true;ch=true;log({action:'SOS_REASON_OVERDUE',cat:'sos',actor:SYS,target:{type:'sos',id:s.id,name:'Stop work'},detail:'Reason for stop-work not provided within the deadline – escalate to management'})}
+if(ch){save();render()}}
+setInterval(tickChecks,20000);
+setInterval(()=>{updateCd();const c=$('#passClock');if(c)c.textContent=new Date().toLocaleString('en-GB');$$('[data-rem]').forEach(e=>{const l=new Date(e.dataset.rem)-Date.now(),g=S.settings.graceMin*6e4;e.className='badge '+(l>0?'ok':l>-g?'warn':'bad');e.textContent=l>0?dur(l)+' left':l>-g?'Due now (+'+dur(l)+')':'OVERDUE '+dur(l)})},1000);
+
+/* =============================== SMALL UI HELPERS =============================== */
+const card=(t,b,c='')=>`<section class="card ${c}">${t?`<h3>${t}</h3>`:''}${b}</section>`;
+const yn=(n)=>`<div class="yn"><label><input type="radio" name="${n}" value="yes" required><span>Yes</span></label><label><input type="radio" name="${n}" value="no" required checked><span>No</span></label></div>`;
+const kv=(k,v)=>`<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:5px 0"><span class="mut">${k}</span><span style="text-align:right">${v}</span></div>`;
+function loadImgs(){$$('img[data-img]').forEach(async im=>{try{const v=await idbGet(im.dataset.img);if(v)im.src=v;else im.alt='Image not stored on this device'}catch(e){im.alt='Image unavailable'}})}
+ACT.zoom=(d,t)=>modal(`<img src="${t.src}" style="width:100%"><br><button class="btn block" data-act="closeModal">Close</button>`,true);
+function pillRow(arr){return arr.length?arr.map(x=>`<div class="small">• ${esc(x)}</div>`).join(''):''}
+
+/* =============================== EMPLOYEE VIEWS =============================== */
+VIEWS.today=u=>{const c=clearanceFor(u.id),att=openAtt(u.id),s=activeSOS(),exp=expiredComps(u);
+const[ico,cls]=ST[c.status],stc={cleared:'ok',pending:'warn',not_cleared:'bad',incomplete:'mut'}[c.status];
+const step=(n,t,state,txt,btn)=>`<div class="step ${state}"><div class="n">${state==='done'?'✓':n}</div><div><b>${t}</b><div class="mut small">${txt}</div></div>${btn||''}</div>`;
+const dsS={none:'todo',ok:'done',pending:'wait',blocked:'bad',denied:'bad'}[c.ds],csS={ok:'done',pending:'wait',unfit:'bad',none:'todo',expired:'todo'}[c.ci.state];
+return`<h1>Hello, ${esc(u.name.split(' ')[0])}</h1><p class="mut">${fmtD(todayKey())}</p>
+${s?`<div class="alert bad"><b>🛑 STOP WORK is active.</b> Do not enter the tunnel. If you are inside, follow emergency procedure and exit via the nearest safe route.</div>`:''}
+<div class="status ${stc}"><b>${ico}</b>${c.status==='cleared'?'You may show your QR pass at the gate':c.reasons[0]||''}</div>
+${att?`<div class="alert info">🚇 You are <b>inside</b> – ${esc(att.zone)} since ${fmtT(att.entryAt)}. Expected out by <b>${fmtT(att.plannedExit)}</b>.</div>`:''}
+${exp.length?`<div class="alert warn">⚠ Expired competency tickets: ${esc(exp.join(', '))}. Tell your supervisor.</div>`:''}
+${card('Today\'s clearance steps',step(1,'Daily health declaration',dsS,{none:'Not submitted yet',ok:'Passed',pending:'Waiting for supervisor review',blocked:'Not cleared – see your supervisor',denied:'Denied by supervisor'}[c.ds],`<button class="btn sm" data-act="go" data-v="declare">${c.ds==='none'?'Start':'View'}</button>`)+
+step(2,'Medical certificate',csS,{ok:`Valid until ${fmtD(c.ci.until)}`,pending:'Waiting for supervisor verification',unfit:'Certificate says NOT fit – see supervisor',none:'Upload your latest certificate',expired:'Expired – upload a new one'}[c.ci.state],`<button class="btn sm" data-act="go" data-v="cert">${c.ci.state==='ok'?'View':'Upload'}</button>`)+
+step(3,'QR entry pass',c.status==='cleared'?'done':'todo',c.status==='cleared'?'Ready':'Unlocks when steps 1 & 2 are complete',`<button class="btn sm" data-act="go" data-v="pass" ${c.status==='cleared'?'':'disabled'}>Open</button>`))}
+${c.reasons.length&&c.status!=='cleared'?card('What is blocking you',pillRow(c.reasons)):''}
+${card('Safety',`<div class="row"><button class="btn" data-act="incident">⚠ Report incident / near-miss</button><button class="btn" data-act="go" data-v="history">My history</button></div>`)}`};
+VIEWS.history=u=>{const rows=[...Array(14)].map((_,i)=>addDays(todayKey(),-i)).map(d=>{const c=clearanceFor(u.id,d),a=S.att.filter(x=>x.userId===u.id&&x.date===d);return`<tr><td>${fmtD(d)}</td><td>${stBadge(c.status)}</td><td>${a.map(x=>fmtT(x.entryAt)).join(', ')||'—'}</td><td>${a.map(x=>x.exitAt?fmtT(x.exitAt):'<i>inside</i>').join(', ')||'—'}</td><td>${a.filter(x=>x.exitAt).map(x=>hoursBetween(x.entryAt,x.exitAt)+'h').join(', ')||'—'}</td></tr>`}).join('');
+const certs=S.certs.filter(c=>c.userId===u.id).slice().reverse();
+return`<h1>My history</h1><div class="tablewrap"><table><tr><th>Date</th><th>Clearance</th><th>In</th><th>Out</th><th>Hours</th></tr>${rows}</table></div><h2>My certificates</h2>${certs.map(c=>certCard(c,false)).join('')||'<p class="mut">None yet.</p>'}`};
+let DECL_AGAIN=false;
+VIEWS.declare=u=>{const x=declFor(u.id,todayKey());if(openAtt(u.id))return card('Health declaration','<p>You are already inside the tunnel. A new declaration can be made after you exit.</p>');
+if(x&&!DECL_AGAIN){const ds=declState(x),a=x.answers;return`<h1>Health declaration</h1>${card('Submitted '+fmtDT(x.submittedAt),`<div class="alert ${{ok:'ok',pending:'warn',blocked:'bad',denied:'bad'}[ds]}">${{ok:'✅ Passed',pending:'⏳ Waiting for supervisor review',blocked:'⛔ Not cleared – see your supervisor',denied:'⛔ Denied by supervisor'}[ds]}</div>${x.flags.length?`<b>Flagged:</b>${pillRow(x.flags.map(f=>f.msg))}`:''}${x.review?`<p class="small mut">Reviewed by ${esc(x.review.byName)} (${cap(x.review.byRole)}) on ${fmtDT(x.review.at)}${x.review.note?': '+esc(x.review.note):''}</p>`:''}<br><button class="btn" data-act="declAgain">Re-submit (new reading)</button>`)}`}
+return`<h1>Daily health declaration</h1><form data-form="decl">${card('Measurements',`<label>Body temperature (°C) – measure it now<input type="number" name="temp" step="0.1" min="33" max="43" inputmode="decimal" required></label><label>Hours of sleep last night<input type="number" name="sleep" step="0.5" min="0" max="16" inputmode="decimal" required></label><label>Hours of rest since your last shift ended<input type="number" name="rest" step="0.5" min="0" max="72" inputmode="decimal" required></label><label>Stress / tiredness today (1 = fresh, 5 = exhausted)<select name="stress">${[1,2,3,4,5].map(n=>`<option>${n}</option>`).join('')}</select></label>`)}
+${card('Symptoms right now <span class="mut small">(tick all that apply)</span>',SYMPTOMS.map(s=>`<label class="chk"><input type="checkbox" name="sym" value="${esc(s[0])}"> ${esc(s[0])}</label>`).join(''))}
+${card('Questions',`<label>Alcohol or recreational drugs in the last 24 hours?</label>${yn('alcohol')}<label>Taking medication that can cause drowsiness?</label>${yn('meds')}<label>Illness, injury or hospital visit since your last declaration?</label>${yn('illness')}<label>Close contact with an infectious case (last 14 days)?</label>${yn('contact')}<label>I feel mentally alert and able to work safely underground</label><div class="yn"><label><input type="radio" name="alert" value="yes" required checked><span>Yes</span></label><label><input type="radio" name="alert" value="no"><span>No</span></label></div><label>Notes (optional)<textarea name="notes"></textarea></label>`)}
+<label class="chk"><input type="checkbox" name="agree" required> I declare the above is true. I understand false declarations are recorded and may lead to disciplinary action.</label><br><button class="btn primary lg block">Submit declaration</button></form>`};
+ACT.declAgain=()=>{DECL_AGAIN=true;render()};
+FORMS.decl=(f,fd)=>{const u=cur();const a={temp:+fd.get('temp'),sleep:+fd.get('sleep'),rest:+fd.get('rest'),stress:+fd.get('stress'),symptoms:fd.getAll('sym'),alcohol:fd.get('alcohol'),meds:fd.get('meds'),illness:fd.get('illness'),contact:fd.get('contact'),alert:fd.get('alert'),notes:fd.get('notes')||''};
+if(!(a.temp>=33&&a.temp<=43))return toast('Check the temperature value','bad');const ev=evalDecl(a);
+tx(()=>{S.decls.push({id:uid(),userId:u.id,date:todayKey(),submittedAt:new Date().toISOString(),answers:a,flags:ev.flags,result:ev.result,review:null});
+log({action:'HEALTH_DECLARATION',cat:'health',target:tgt('user',u),detail:`Temp ${a.temp}°C, sleep ${a.sleep}h, rest ${a.rest}h, stress ${a.stress}/5, symptoms: ${a.symptoms.join(', ')||'none'}, alcohol/drugs: ${a.alcohol}, meds: ${a.meds}, illness: ${a.illness}, contact: ${a.contact}, alert: ${a.alert}. Result: ${ev.result.toUpperCase()}${ev.flags.length?' ['+ev.flags.map(x=>x.msg).join('; ')+']':''}`,approval:ev.result==='ok'?APPR('approved','System (rules engine)','system','auto'):null})});
+DECL_AGAIN=false;toast(ev.result==='ok'?'Declaration passed ✅':ev.result==='review'?'Sent to your supervisor for review':'You are not cleared today – see your supervisor',ev.result==='ok'?'ok':'bad');go('today')};
+
+/* ---- certificate upload ---- */
+let CERT={busy:false,progress:0,msg:'',result:null,thumb:null};
+const certCard=(c,img=true)=>{const e=ceff(c),[t,k]=CSTAT[c.status],until=['auto_approved','manual_approved'].includes(c.status)?addDays(e.date,S.settings.certDays):null;
+return`<div class="card">${img?`<div class="row" style="justify-content:space-between"><b>Uploaded ${fmtDT(c.uploadedAt)}</b>${badge(t,k)}</div>`:`<div class="row" style="justify-content:space-between"><b>${fmtDT(c.uploadedAt)}</b>${badge(t,k)}</div>`}
+${kv('Appointment date',e.date?fmtD(e.date):'<i>not found</i>')}${kv('Clinic',esc(e.clinic)||'<i>not found</i>')}${kv('Fitness',e.fitness?{fit:'Fit for work',unfit:'<b style="color:var(--bad)">UNFIT</b>',restricted:'Fit with restrictions'}[e.fitness]:'<i>not found</i>')}${until?kv('Valid until',fmtD(until)):''}
+${c.issues?.length&&c.status!=='auto_approved'?`<div class="small" style="margin-top:6px"><b>Notes:</b>${pillRow(c.issues)}</div>`:''}
+${c.review?`<p class="small mut">Reviewed by ${esc(c.review.byName)} (${cap(c.review.byRole)}) – ${fmtDT(c.review.at)}${c.review.note?': '+esc(c.review.note):''}</p>`:c.status==='auto_approved'?'<p class="small mut">Approved automatically from the certificate image.</p>':''}</div>`};
+VIEWS.cert=u=>{const mine=S.certs.filter(c=>c.userId===u.id),last=mine[mine.length-1];
+return`<h1>Medical certificate</h1><p class="mut">Upload a clear photo of your medical certificate. The app reads the <b>appointment date</b>, <b>clinic name</b> and <b>fitness statement</b>. If everything is readable and you are fit, you are approved automatically. Otherwise a supervisor will verify it.</p>
+${card('Upload',`<div class="grid g2"><label class="btn dark block" style="text-align:center;margin:0">📷 Take photo<input type="file" id="certFile" accept="image/*" capture="environment" hidden></label><label class="btn block" style="text-align:center;margin:0">🖼 Choose image<input type="file" id="certFile2" accept="image/*" hidden onchange="onCertFile(this.files[0])"></label></div>
+<div id="certProg" ${CERT.busy?'':'hidden'}><p class="mut" id="certMsg">${esc(CERT.msg)}</p><div class="prog"><i id="certBar" style="width:${CERT.progress}%"></i></div></div>
+${CERT.thumb&&!CERT.busy&&!CERT.result?`<img class="thumb" src="${CERT.thumb}">`:''}
+${CERT.result?`<div class="alert ${CERT.result.cls}"><b>${CERT.result.title}</b><br>${CERT.result.text}</div>`:''}
+${S.settings.demoMode?`<details style="margin-top:10px"><summary>🧪 Demo: test with typed certificate text</summary><form data-form="certText"><p class="small mut">Simulates what the image reader would extract. Only available while Demo mode is ON (Settings).</p><textarea name="t" placeholder="Harbour Medical Centre&#10;Date of appointment: ${fmtD(todayKey()).replace(/ /g,' ')}&#10;This is to certify that ${esc(u.name)} is fit for work.&#10;"></textarea><br><button class="btn sm">Analyse text</button></form></details>`:''}
+<p class="small mut">Photos only (JPG/PNG/HEIC from camera). Reading happens on this device and needs internet the first time.</p>`)}
+${last?`<h2>Latest certificate</h2>${certCard(last)}${last.imgId||last.img?`<img class="thumb" ${last.img?`src="${last.img}"`:`data-img="${last.imgId}"`} data-act="zoom">`:''}`:''}`};
+window.onCertFile=async f=>{if(!f)return;CERT={busy:true,progress:2,msg:'Preparing image…',result:null,thumb:null};render();
+try{const{ocrCanvas,thumb}=await prepImage(f);CERT.thumb=thumb;CERT.msg='Loading text reader (first time only)…';render();await loadLib('tesseract');
+const worker=await Tesseract.createWorker('eng',1,{logger:m=>{if(m.status==='recognizing text'){CERT.progress=10+Math.round(m.progress*85);CERT.msg='Reading certificate… '+CERT.progress+'%';const b=$('#certBar'),t=$('#certMsg');if(b)b.style.width=CERT.progress+'%';if(t)t.textContent=CERT.msg}}});
+const{data}=await worker.recognize(ocrCanvas);await worker.terminate();await finishCert(data.text||'',data.confidence||0,thumb)}
+catch(e){await finishCert('',0,CERT.thumb,'Automatic reading unavailable: '+(e.message||e))}};
+async function prepImage(f){const url=URL.createObjectURL(f);const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('Could not open this image'));i.src=url});
+const sc=Math.min(1,1800/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);const x=c.getContext('2d');x.drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);
+const t=document.createElement('canvas'),ts=Math.min(1,1100/Math.max(c.width,c.height));t.width=Math.round(c.width*ts);t.height=Math.round(c.height*ts);t.getContext('2d').drawImage(c,0,0,t.width,t.height);const thumb=t.toDataURL('image/jpeg',.7);
+const d=x.getImageData(0,0,c.width,c.height),p=d.data;for(let i=0;i<p.length;i+=4){let g=.299*p[i]+.587*p[i+1]+.114*p[i+2];g=Math.max(0,Math.min(255,(g-128)*1.3+128));p[i]=p[i+1]=p[i+2]=g}x.putImageData(d,0,0);return{ocrCanvas:c,thumb}}
+FORMS.certText=(f,fd)=>{if(!S.settings.demoMode)return;finishCert(String(fd.get('t')),90,null,'',true)};
+async function finishCert(text,conf,thumb,err='',demo=false){const u=cur();CERT.busy=false;const p=parseCert(text,u),imgHash=thumb?h53(thumb):'';const dec=err?{status:'pending_review',issues:[err,'Supervisor must verify the original certificate']}:decideCert(p,conf,text.trim().length,u,imgHash);
+let imgId=null,img=null;if(thumb){imgId=uid();try{await idbPut(imgId,thumb)}catch(e){imgId=null;img=thumb}}
+tx(()=>{const c={id:uid(),userId:u.id,uploadedAt:new Date().toISOString(),imgId,img,imgHash,ocr:{...p,conf:Math.round(conf),raw:text.slice(0,4000),demo},issues:dec.issues,status:dec.status,final:null,review:null};S.certs.push(c);
+const auto=dec.status==='auto_approved';log({action:auto?'CERT_AUTO_APPROVED':dec.status==='unfit'?'CERT_UNFIT_DETECTED':dec.status==='rejected'?'CERT_REJECTED_AUTO':'CERT_SENT_FOR_REVIEW',cat:'certificate',target:tgt('user',u),detail:`Date ${p.date||'?'}, clinic ${p.clinic||'?'}, fitness ${p.fitness||'?'}, name match ${p.nameMatch?'yes':'no'}, OCR confidence ${Math.round(conf)}%.${dec.issues.length?' Issues: '+dec.issues.join('; '):''}${demo?' [DEMO TEXT INPUT]':''}`,approval:auto?APPR('approved','System (automatic reading)','system','auto-ocr'):dec.status==='unfit'?APPR('not fit','System (automatic reading)','system','auto-ocr'):null})});
+const R={auto_approved:{cls:'ok',title:'✅ Approved automatically',text:`Appointment ${fmtD(p.date)} · ${esc(p.clinic)} · Fit for work. Valid for ${S.settings.certDays} days. Complete your health declaration to get your QR pass.`},
+pending_review:{cls:'warn',title:'⏳ Sent to your supervisor',text:'We could not fully verify it automatically:<br>'+dec.issues.map(i=>'• '+esc(i)).join('<br>')+'<br>Please see your supervisor – you can show the paper certificate.'},
+rejected:{cls:'bad',title:'❌ Not accepted',text:esc(dec.issues[0])},unfit:{cls:'bad',title:'⛔ Certificate says NOT fit for work',text:'You cannot enter the tunnel. Your supervisor has been notified.'}}[dec.status];
+CERT.result=R;render()}
+
+/* ---- QR pass ---- */
+const passSig=(code,d,nonce)=>h53([code,d,nonce,S.meta.secret].join('|')).slice(0,10);
+function ensurePass(u){const k=u.id+'|'+todayKey();if(!S.qr[k]){tx(()=>{S.qr[k]={nonce:uid().slice(-8),issuedAt:new Date().toISOString()};log({action:'QR_PASS_ISSUED',cat:'attendance',target:tgt('user',u),detail:'Daily QR pass generated for '+todayKey()})})}return S.qr[k]}
+function qrSVG(t){if(!window.qrcode)return null;const q=qrcode(0,'M');q.addData(t);q.make();const n=q.getModuleCount();let p='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))p+=`M${c+2},${r+2}h1v1h-1z`;return`<svg viewBox="0 0 ${n+4} ${n+4}" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="#fff"/><path d="${p}" fill="#000"/></svg>`}
+VIEWS.pass=u=>{const c=clearanceFor(u.id);if(c.status!=='cleared')return`<h1>QR pass</h1><div class="status ${c.status==='pending'?'warn':'bad'}"><b>🔒 Pass locked</b>${esc(c.reasons[0]||'Not cleared')}</div>${card('To unlock',pillRow(c.reasons))}`;
+const q=ensurePass(u),code=['TG1',u.code,todayKey(),q.nonce,passSig(u.code,todayKey(),q.nonce)].join('.'),svg=qrSVG(code);
+return`<h1>Today's QR pass</h1><div class="card" style="text-align:center"><div class="badge ok">✅ CLEARED</div><h2 style="margin:6px 0 0">${esc(u.name)}</h2><div class="mut">${esc(u.code)} · ${esc(u.skill)} ${u.level?'('+esc(u.level)+')':''}</div><br>
+<div class="qrbox">${svg||'<p style="padding:40px 10px" class="mut">QR library could not load (offline?). Show the code below to your supervisor.</p>'}</div>
+<p id="passClock" style="font-weight:700;font-variant-numeric:tabular-nums">${new Date().toLocaleString('en-GB')}</p><p class="small mut">Valid only on ${fmtD(todayKey())}. Re-checked live at the gate. A screenshot will not work after your clearance changes.</p>
+<details><summary>Can't scan? Read out this code</summary><p style="word-break:break-all;font-family:monospace">${esc(code)}</p></details></div>`};
+AFTER.pass=()=>{if(!window.qrcode)loadLib('qr').then(()=>{if(VIEW==='pass')render()}).catch(()=>{})};
+
+/* ---- incident report (all internal roles) ---- */
+ACT.incident=()=>{const u=cur();modal(`<h3>Report incident / near-miss</h3><form data-form="incident"><label>Type<select name="type" required>${['Near miss','First aid case','Medical treatment','Property / equipment damage','Gas alarm','Ground movement','Water ingress','Fire / smoke','Unsafe condition','Health concern','Other'].map(t=>`<option>${t}</option>`).join('')}</select></label><label>Severity<select name="sev"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></label><label>Location<select name="zone">${S.settings.zones.map(z=>`<option>${esc(z)}</option>`).join('')}</select></label><label>What happened?<textarea name="desc" required minlength="10"></textarea></label>${isStaff(u)?`<label>Person involved (optional)</label>${combo('incPerson',S.users.filter(x=>x.active))}`:''}<br><div class="row"><button class="btn primary sp">Submit report</button><button type="button" class="btn" data-act="closeModal">Cancel</button></div></form>`)};
+FORMS.incident=(f,fd)=>{const u=cur(),p=fd.get('incPerson')?byId(fd.get('incPerson')):null;tx(()=>{const i={id:uid(),no:'INC-'+String(S.incidents.length+1).padStart(4,'0'),type:fd.get('type'),sev:fd.get('sev'),zone:fd.get('zone'),desc:fd.get('desc'),by:u.id,byName:u.name,at:new Date().toISOString(),person:p?p.name+' ('+p.code+')':''};S.incidents.push(i);log({action:'INCIDENT_REPORTED',cat:'incident',target:{type:'incident',id:i.id,code:i.no,name:i.type},detail:`${i.sev} – ${i.type} at ${i.zone}: ${i.desc}${i.person?' | Person: '+i.person:''}`})});closeModal();toast('Incident recorded','ok');render()};
+
+/* =============================== GATE (supervisor / manager) =============================== */
+let CAM={active:false,stream:null,raf:0};
+function stopCam(){CAM.active=false;cancelAnimationFrame(CAM.raf);if(CAM.stream){CAM.stream.getTracks().forEach(t=>t.stop());CAM.stream=null}}
+ACT.stopCam=()=>{stopCam();render()};
+ACT.startCam=async()=>{try{await loadLib('jsqr');CAM.active=true;render();const v=$('#cam');CAM.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});v.srcObject=CAM.stream;await v.play();camTick()}catch(e){stopCam();render();toast('Camera not available: '+(e.message||e)+'. Use the manual options below.','bad')}};
+function camTick(){if(!CAM.active)return;const v=$('#cam');if(v&&v.readyState>=2&&v.videoWidth){const w=Math.min(640,v.videoWidth),h=Math.round(v.videoHeight*w/v.videoWidth),c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(v,0,0,w,h);const r=jsQR(x.getImageData(0,0,w,h).data,w,h,{inversionAttempts:'dontInvert'});if(r&&r.data){stopCam();return handleCode(r.data)}}CAM.raf=requestAnimationFrame(camTick)}
+function handleCode(text){const p=String(text).trim().split('.');if(p[0]!=='TG1'||p.length!==5){GATE={error:'Not a TunnelGuard pass.'};return render()}
+const u=S.users.find(x=>x.code===p[1]);if(!u){GATE={error:'Unknown person on pass.'};return render()}
+const q=S.qr[u.id+'|'+p[2]];
+if(p[2]!==todayKey())GATE={user:u.id,error:`Pass is for ${fmtD(p[2])}, not today.`};
+else if(!q||q.nonce!==p[3]||passSig(p[1],p[2],p[3])!==p[4])GATE={user:u.id,error:'Pass is invalid or has been replaced (possible copy).'};
+else GATE={user:u.id,method:'qr'};
+if(GATE.error)tx(()=>log({action:'GATE_PASS_REJECTED',cat:'attendance',target:tgt('user',u),detail:GATE.error}));
+navigator.vibrate&&navigator.vibrate(80);render()}
+ACT.codeGo=()=>{const v=$('#codeIn').value;if(v)handleCode(v)};
+VIEWS.scan=u=>{const sos=activeSOS();
+return`<h1>Gate – entry & exit</h1>${sos?`<div class="alert bad"><b>🛑 Stop-work active.</b> New entries are blocked. Exits can still be recorded.</div>`:''}
+${card('Scan worker\'s QR pass',`<div class="camwrap" ${CAM.active?'':'hidden'}><video id="cam" playsinline muted></video><div class="aim"></div></div><div class="row"><button class="btn primary lg" data-act="startCam" ${CAM.active?'disabled':''}>${CAM.active?'Scanning…':'📷 Open camera & scan'}</button>${CAM.active?'<button class="btn" data-act="stopCam">Stop</button>':''}</div><p class="small mut">Camera works when opened from HTTPS or locally. No camera? Use the options below (logged as manual).</p>`)}
+${card('Manual check-in / check-out',`<label>Find person</label>${combo('gatePick',S.users.filter(x=>x.active&&x.role==='employee'),{cb:id=>{GATE={user:id,method:'manual'};render()}})}<label>…or type the pass code</label><div class="row"><input type="text" id="codeIn" style="flex:1" placeholder="TG1.TG-1001.2026-…"><button class="btn" data-act="codeGo">Check</button></div>`)}
+${GATE?gateCard():''}`};
+function gateCheck(user){const sos=activeSOS(),c=clearanceFor(user.id),exp=expiredComps(user),inside=openAtt(user.id);
+const checks=[{ok:user.active,t:'Account active',m:user.active?'Yes':'Deactivated',block:1},{ok:c.status==='cleared',t:'Health clearance today',m:c.status==='cleared'?'Cleared (declaration + certificate)':c.reasons.join('; ')||'Not cleared',block:1},{ok:!sos,t:'Stop-work status',m:sos?'STOP WORK ACTIVE':'Normal operations',block:1},{ok:!exp.length,t:'Competency tickets',m:exp.length?'Expired: '+exp.join(', '):'All valid',block:0}];
+return{checks,blocked:checks.some(x=>!x.ok&&x.block),exp,inside,c}}
+function gateCard(){if(GATE.error&&!GATE.user)return`<div class="alert bad"><b>⛔ ${esc(GATE.error)}</b></div>`;const user=byId(GATE.user);if(!user)return'';
+const g=gateCheck(user),head=`<div class="row"><div class="sp"><h3 style="margin:0">${esc(user.name)}</h3><div class="mut small">${esc(user.code)} · ${esc(user.skill)} ${user.level?'('+esc(user.level)+')':''} · ${esc(user.company||'In-house')}</div></div>${GATE.method==='qr'?badge('QR verified ✓','ok'):badge('Manual','warn')}</div>`;
+if(GATE.error)return card('',head+`<div class="alert bad"><b>⛔ ${esc(GATE.error)}</b></div><p class="small">Use manual check below if the person is genuinely cleared and has a pass problem.</p><button class="btn" data-act="gateManual" data-id="${user.id}">Continue manually</button>`);
+const list=g.checks.map(x=>`<div class="small">${x.ok?'✅':x.block?'⛔':'⚠️'} <b>${x.t}:</b> ${esc(x.m)}</div>`).join('');
+if(g.inside){const a=g.inside;return card('',head+`<div class="alert info">Currently <b>inside</b> – ${esc(a.zone)} since ${fmtT(a.entryAt)}; planned exit ${fmtT(a.plannedExit)}</div><form data-form="exit" data-att="${a.id}">${GATE.method==='manual'?'<label>Reason for manual exit<input type="text" name="why" required placeholder="e.g. phone battery dead"></label>':''}<br><button class="btn ok lg block">⏏ Record EXIT now</button></form>`)}
+const need=GATE.method==='manual',dflt=toLocalInput(new Date(Date.now()+S.settings.shiftHrs*36e5));
+return card('',head+`<div style="margin:8px 0">${list}</div>${g.blocked?`<div class="alert bad"><b>⛔ ENTRY NOT PERMITTED</b></div>`:`<form data-form="entry"><label>Zone / work area<select name="zone">${S.settings.zones.map(z=>`<option>${esc(z)}</option>`).join('')}</select></label><label>Planned exit time<input type="datetime-local" name="plan" value="${dflt}" required></label>${need?'<label>Reason for manual entry<input type="text" name="why" required placeholder="e.g. camera not working"></label>':''}${g.exp.length?`<label>Competency override reason (mandatory – expired: ${esc(g.exp.join(', '))})<input type="text" name="ovr" required></label>`:''}<label>Notes (optional)<input type="text" name="notes"></label><br><button class="btn ok lg block">✅ Approve ENTRY</button></form>`}`)}
+ACT.gateManual=d=>{GATE={user:d.id,method:'manual'};render()};
+FORMS.entry=(f,fd)=>{const u=cur(),id=GATE?.user,g=gateCheck(byId(id));if(g.blocked)return toast('Entry blocked','bad');const plan=new Date(fd.get('plan'));if(!(plan>new Date()))return toast('Planned exit must be in the future','bad');
+tx(()=>{const w=byId(id),now=new Date().toISOString();if(openAtt(id))return;const a={id:uid(),userId:id,date:todayKey(),zone:fd.get('zone'),entryAt:now,plannedExit:plan.toISOString(),entryBy:u.id,entryByName:u.name,entryMethod:GATE.method,entryWhy:fd.get('why')||'',override:fd.get('ovr')||'',notes:fd.get('notes')||'',exitAt:null,overdueLogged:false};S.att.push(a);
+log({action:'ENTRY_APPROVED',cat:'attendance',target:tgt('user',w),detail:`Entered ${a.zone}. Planned exit ${fmtDT(a.plannedExit)}. Method: ${a.entryMethod==='qr'?'QR scan':'MANUAL – '+a.entryWhy}.${a.override?' COMPETENCY OVERRIDE: '+a.override+' (expired: '+g.exp.join(', ')+').':''}${a.notes?' Notes: '+a.notes:''}`,approval:APPR('approved',u.name,u.role,a.entryMethod==='qr'?'qr-scan':'manual-entry',a.override||a.entryWhy)})});
+toast('Entry recorded','ok');navigator.vibrate&&navigator.vibrate(120);GATE=null;render()};
+FORMS.exit=(f,fd)=>doExit(f.dataset.att,GATE?.method||'manual',fd.get('why')||'');
+function doExit(attId,method,why){const u=cur();tx(()=>{const a=S.att.find(x=>x.id===attId);if(!a||a.exitAt)return;const w=byId(a.userId);a.exitAt=new Date().toISOString();a.exitBy=u.id;a.exitByName=u.name;a.exitMethod=method;a.exitWhy=why;const s=activeSOS();if(s&&s.snapshot.includes(a.userId)&&!s.muster[a.userId])s.muster[a.userId]={at:a.exitAt,by:u.name,how:'Exit recorded at gate'};
+log({action:'EXIT_RECORDED',cat:'attendance',target:tgt('user',w),detail:`Left ${a.zone}. In ${fmtDT(a.entryAt)} → out ${fmtDT(a.exitAt)} (${hoursBetween(a.entryAt,a.exitAt)} h). Planned exit was ${fmtT(a.plannedExit)}.${a.exitAt>a.plannedExit?' LATE exit.':''} Method: ${method==='qr'?'QR scan':'manual'}${why?' – '+why:''}`,approval:APPR('recorded',u.name,u.role,method==='qr'?'qr-scan':'manual-entry',why)})});toast('Exit recorded','ok');GATE=null;render()}
+ACT.exitNow=d=>{const a=S.att.find(x=>x.id===d.id);if(!a)return;const why=prompt('Reason for manual exit record (required):','');if(!why)return toast('Reason required','bad');doExit(d.id,'manual',why)};
+ACT.extend=d=>{const a=S.att.find(x=>x.id===d.id);if(!a)return;const v=prompt('New planned exit (HH:MM today):',fmtT(a.plannedExit));if(!v||!/^\d{1,2}:\d{2}$/.test(v))return;const why=prompt('Reason for extending (required):','');if(!why)return toast('Reason required','bad');const[h,m]=v.split(':').map(Number),n=new Date();n.setHours(h,m,0,0);if(n<=new Date(a.entryAt))return toast('Must be after entry time','bad');const u=cur();
+tx(()=>{const x=S.att.find(y=>y.id===d.id);const old=x.plannedExit;x.plannedExit=n.toISOString();x.overdueLogged=false;log({action:'PLANNED_EXIT_CHANGED',cat:'attendance',target:tgt('user',byId(x.userId)),before:fmtDT(old),after:fmtDT(x.plannedExit),detail:'Reason: '+why,approval:APPR('approved',u.name,u.role,'manual',why)})});render()};
+
+/* =============================== WHO IS IN THE TUNNEL =============================== */
+VIEWS.inside=u=>{const L=S.att.filter(a=>!a.exitAt).sort((a,b)=>new Date(a.plannedExit)-new Date(b.plannedExit)),byZone={};L.forEach(a=>byZone[a.zone]=(byZone[a.zone]||0)+1);
+return`<h1>In the tunnel now: ${L.length}</h1><div class="row" style="margin-bottom:10px">${Object.entries(byZone).map(([z,n])=>badge(esc(z)+': '+n,'info')).join('')}</div>
+${L.length?L.map(a=>{const w=byId(a.userId)||{};return`<div class="card"><div class="row"><div class="sp"><b>${esc(w.name)}</b> <span class="mut small">${esc(w.code)}</span><div class="small mut">${esc(w.skill)} · ${esc(w.company||'In-house')}</div></div><span data-rem="${a.plannedExit}" class="badge"></span></div>${kv('Zone',esc(a.zone))}${kv('In',fmtDT(a.entryAt)+' by '+esc(a.entryByName))}${kv('Planned exit',fmtDT(a.plannedExit))}${kv('Emergency contact',w.emergency?.phone?`${esc(w.emergency.name)} <a href="tel:${esc(w.emergency.phone)}">${esc(w.emergency.phone)}</a>`:'—')}<div class="row" style="margin-top:8px"><button class="btn sm ok" data-act="exitNow" data-id="${a.id}">Record exit</button><button class="btn sm" data-act="extend" data-id="${a.id}">Change planned exit</button>${w.phone?`<a class="btn sm" href="tel:${esc(w.phone)}">📞 Call</a>`:''}</div></div>`}).join(''):'<div class="card mut">Nobody is currently recorded inside the tunnel.</div>'}`};
+
+/* =============================== REVIEWS =============================== */
+VIEWS.reviews=u=>{const q=reviewQueue(),certC=q.certs.map(c=>{const w=byId(c.userId)||{},e=ceff(c);return`<div class="card"><div class="row"><b>${esc(w.name)}</b><span class="mut small">${esc(w.code)}</span><span class="sp"></span>${badge('Certificate','info')}</div><div class="small mut">Uploaded ${fmtDT(c.uploadedAt)}</div>${c.issues?.length?`<div class="alert warn small"><b>Why it needs a person:</b>${pillRow(c.issues)}</div>`:''}
+${c.imgId||c.img?`<img class="thumb" ${c.img?`src="${c.img}"`:`data-img="${c.imgId}"`} data-act="zoom">`:'<p class="mut small">No image stored.</p>'}
+<form data-form="certReview" data-id="${c.id}"><div class="grid g2"><div><label>Appointment date (as on paper)</label><input type="date" name="date" value="${e.date&&c.ocr?.date?e.date:''}" required></div><div><label>Fitness</label><select name="fit"><option value="fit" ${e.fitness==='fit'?'selected':''}>Fit for work</option><option value="unfit" ${e.fitness==='unfit'?'selected':''}>UNFIT</option></select></div></div><label>Clinic name</label><input type="text" name="clinic" value="${esc(e.clinic)}" required><label>Note</label><input type="text" name="note" placeholder="How you verified (required if rejecting)"><label class="chk"><input type="checkbox" name="ver"> I have checked the original certificate and the person's identity</label><div class="row" style="margin-top:8px"><button class="btn ok sp" name="d" value="approve">✅ Approve</button><button class="btn bad" name="d" value="unfit">⛔ Record UNFIT</button><button class="btn" name="d" value="reject">Reject / re-upload</button></div></form></div>`}).join(''),
+declC=q.decls.map(x=>declReviewCard(x,u,false)).join(''),blkC=q.blocked.map(x=>declReviewCard(x,u,true)).join('');
+return`<h1>Reviews & approvals</h1><p class="mut">Every decision is recorded in the audit book with your name, role, date and time.</p>${certC?`<h2>Medical certificates (${q.certs.length})</h2>${certC}`:''}${declC?`<h2>Health declarations to review (${q.decls.length})</h2>${declC}`:''}${blkC?`<h2>Blocked declarations (${q.blocked.length})</h2>${u.role==='manager'?'<p class="small mut">Failed declarations can only be overridden by a Manager.</p>':'<p class="small mut">Visible for information. Only a Manager can override these.</p>'}${blkC}`:''}${!certC&&!declC&&!blkC?'<div class="card">🎉 Nothing waiting for review.</div>':''}`};
+function declReviewCard(x,u,blocked){const w=byId(x.userId)||{},a=x.answers,can=!blocked||u.role==='manager';return`<div class="card"><div class="row"><b>${esc(w.name)}</b><span class="mut small">${esc(w.code)} · ${fmtDT(x.submittedAt)}</span><span class="sp"></span>${badge(blocked?'BLOCKED':'Review',blocked?'bad':'warn')}</div>${pillRow(x.flags.map(f=>(f.sev==='block'?'⛔ ':'⚠ ')+f.msg))}<div class="small mut" style="margin-top:6px">Temp ${a.temp}°C · sleep ${a.sleep}h · rest ${a.rest}h · stress ${a.stress}/5${a.notes?' · "'+esc(a.notes)+'"':''}</div>${can?`<form data-form="declReview" data-id="${x.id}"><label>Note ${blocked?'(required for override)':''}</label><input type="text" name="note" ${blocked?'required':''} placeholder="e.g. re-measured temp 36.8°C in front of me"><div class="row" style="margin-top:8px"><button class="btn ok sp" name="d" value="approved">✅ ${blocked?'Override – allow':'Approve'}</button><button class="btn bad" name="d" value="denied">Deny today</button></div></form>`:''}</div>`}
+FORMS.certReview=(f,fd,sub)=>{const u=cur(),d=sub?.value,id=f.dataset.id,note=String(fd.get('note')||'').trim();
+if(d==='approve'){if(!fd.get('ver'))return toast('Tick the verification box first','bad');if(fd.get('fit')!=='fit')return toast('Use "Record UNFIT" for unfit certificates','bad');const dt=fd.get('date');if(!dt||dt>todayKey()||dt<addDays(todayKey(),-S.settings.certDays))return toast(`Date must be within the last ${S.settings.certDays} days`,'bad')}
+if(d==='reject'&&!note)return toast('Add a note explaining the rejection','bad');if(d==='unfit'&&!fd.get('ver'))return toast('Tick the verification box first','bad');
+tx(()=>{const c=S.certs.find(x=>x.id===id);if(!c||c.status!=='pending_review')return;const w=byId(c.userId),before=`${c.ocr?.date||'?'} | ${c.ocr?.clinic||'?'} | ${c.ocr?.fitness||'?'}`;
+c.final={date:fd.get('date')||cdate(c),clinic:fd.get('clinic'),fitness:fd.get('fit')};c.status=d==='approve'?'manual_approved':d==='unfit'?'unfit':'rejected';c.review={decision:d,by:u.id,byName:u.name,byRole:u.role,at:new Date().toISOString(),note};
+log({action:d==='approve'?'CERT_APPROVED_MANUAL':d==='unfit'?'CERT_MARKED_UNFIT':'CERT_REJECTED_MANUAL',cat:'certificate',target:tgt('user',w),before,after:`${c.final.date} | ${c.final.clinic} | ${c.final.fitness}`,detail:`Manual review. ${c.issues.join('; ')}${note?' | Note: '+note:''}`,approval:APPR(d==='approve'?'approved':d==='unfit'?'not fit':'rejected',u.name,u.role,'manual',note)})});toast('Decision recorded','ok');render()};
+FORMS.declReview=(f,fd,sub)=>{const u=cur(),d=sub?.value,id=f.dataset.id,note=String(fd.get('note')||'').trim();
+tx(()=>{const x=S.decls.find(y=>y.id===id);if(!x||x.review)return;if(x.result==='block'&&u.role!=='manager')return;x.review={decision:d,by:u.id,byName:u.name,byRole:u.role,at:new Date().toISOString(),note};
+log({action:d==='approved'?'DECLARATION_APPROVED':'DECLARATION_DENIED',cat:'health',target:tgt('user',byId(x.userId)),detail:`${x.result==='block'?'OVERRIDE of blocked declaration. ':''}Flags: ${x.flags.map(z=>z.msg).join('; ')}${note?' | Note: '+note:''}`,approval:APPR(d,u.name,u.role,x.result==='block'?'manager-override':'manual',note)})});toast('Decision recorded','ok');render()};
+
+/* =============================== PEOPLE =============================== */
+let PEOPLE={sel:null,role:'',q:''};
+VIEWS.people=u=>{const sel=PEOPLE.sel&&byId(PEOPLE.sel);const rl=S.users.filter(x=>(!PEOPLE.role||x.role===PEOPLE.role));
+return`<div class="row"><h1 class="sp" style="margin:0">People</h1><button class="btn primary" data-act="newUser">＋ Register user</button></div><br>
+${card('Find a person',`${combo('peoplePick',S.users,{sel:PEOPLE.sel,cb:id=>{PEOPLE.sel=id;render()}})}<div class="row" style="margin-top:8px"><span class="small mut">Filter list:</span>${['','employee','supervisor','manager','vendor'].map(r=>`<span class="chip ${PEOPLE.role===r?'on':''}" style="${PEOPLE.role===r?'background:var(--dark);color:#fff':''}" data-act="roleF" data-r="${r}">${r?cap(r):'All'}</span>`).join('')}</div>`)}
+${sel?personCard(sel,u):''}
+<div class="tablewrap"><table><tr><th>Name</th><th>ID</th><th>Role</th><th>Skill / level</th><th>Company</th><th>Today</th><th></th></tr>${rl.map(x=>{const c=x.role==='employee'?stBadge(clearanceFor(x.id).status):'';return`<tr><td>${esc(x.name)} ${x.active?'':badge('inactive','bad')}</td><td>${esc(x.code)}</td><td>${cap(x.role)}</td><td>${esc(x.skill)} ${x.level?'· '+esc(x.level):''}</td><td>${esc(x.company||'In-house')}</td><td>${c}</td><td><button class="btn sm" data-act="selUser" data-id="${x.id}">Open</button></td></tr>`}).join('')}</table></div>`};
+ACT.roleF=d=>{PEOPLE.role=d.r;render()};ACT.selUser=d=>{PEOPLE.sel=d.id;render();window.scrollTo(0,0)};
+function canManage(u,t){return u.role==='manager'?true:(t.role==='employee'||t.role==='vendor')}
+function personCard(t,u){const c=t.role==='employee'?clearanceFor(t.id):null,att=openAtt(t.id),exp=expiredComps(t);
+return card(esc(t.name)+' '+badge(cap(t.role),'dark')+(t.active?'':' '+badge('inactive','bad')),`${kv('ID',esc(t.code))}${kv('Email',esc(t.email))}${kv('Phone',esc(t.phone))}${kv('Address',esc(t.address))}${kv('Skill / level',esc(t.skill)+(t.level?' · '+esc(t.level):''))}${kv('Company',esc(t.company||'In-house'))}${kv('Date of birth',t.dob?fmtD(t.dob):'—')}${kv('Emergency contact',esc(t.emergency?.name)+' '+esc(t.emergency?.phone))}${kv('Blood group',esc(t.blood)||'—')}
+${kv('Competencies',Object.entries(t.comps||{}).map(([k,v])=>`${esc(k)}: ${v<todayKey()?'<b style="color:var(--bad)">expired '+fmtD(v)+'</b>':fmtD(v)}`).join('<br>')||'—')}
+${c?kv('Clearance today',stBadge(c.status))+(c.reasons.length&&c.status!=='cleared'?`<div class="small mut">${esc(c.reasons.join('; '))}</div>`:''):''}${att?kv('Tunnel',`Inside – ${esc(att.zone)} since ${fmtT(att.entryAt)}`):''}${kv('Registered',fmtDT(t.created)+' by '+esc(t.createdBy))}${kv('Privacy notice accepted',t.consent?fmtDT(t.consent):'Not yet')}
+<div class="row" style="margin-top:10px">${canManage(u,t)?`<button class="btn sm" data-act="editUser" data-id="${t.id}">✏ Edit</button><button class="btn sm" data-act="resetPin" data-id="${t.id}">🔑 Reset PIN</button>${t.id!==u.id?`<button class="btn sm ${t.active?'bad':'ok'}" data-act="toggleUser" data-id="${t.id}">${t.active?'Deactivate':'Re-activate'}</button>`:''}`:''}<button class="btn sm" data-act="userAudit" data-id="${t.id}">📒 Audit trail</button></div>`)}
+ACT.userAudit=d=>{AUD={...AUD,actor:'',q:byId(d.id).code,cat:'',mode:'all',page:0};go('audit')};
+function userForm(t,u){const sk=S.settings.skills,roles=u.role==='manager'?['employee','supervisor','manager','vendor']:['employee','vendor'];t=t||{role:'employee',comps:{},emergency:{}};
+return`<form data-form="user" data-id="${t.id||''}"><label>Role</label><select name="role" ${t.id?'disabled':''}>${roles.map(r=>`<option value="${r}" ${t.role===r?'selected':''}>${cap(r)}</option>`).join('')}</select><label>Full name *</label><input type="text" name="name" required value="${esc(t.name)}"><label>Email *</label><input type="email" name="email" required value="${esc(t.email)}"><label>Mobile phone</label><input type="tel" name="phone" value="${esc(t.phone)}"><label>Home address</label><textarea name="address">${esc(t.address)}</textarea>
+<div class="grid g2"><div><label>Skill</label><select name="skill"><option value="">—</option>${sk.map(s=>`<option ${t.skill===s?'selected':''}>${esc(s)}</option>`).join('')}${t.skill&&!sk.includes(t.skill)?`<option selected>${esc(t.skill)}</option>`:''}</select></div><div><label>Skill level</label><select name="level"><option value="">—</option>${SKILL_LEVELS.map(s=>`<option ${t.level===s?'selected':''}>${s}</option>`).join('')}</select></div></div>
+<label>Company (leave empty for in-house staff; required for vendors)</label><input type="text" name="company" list="cos" value="${esc(t.company)}"><datalist id="cos">${companies().map(c=>`<option>${esc(c)}</option>`).join('')}</datalist>
+<div class="grid g2"><div><label>Date of birth</label><input type="date" name="dob" value="${esc(t.dob)}"></div><div><label>Blood group (optional)</label><input type="text" name="blood" value="${esc(t.blood)}" maxlength="5"></div><div><label>Emergency contact name</label><input type="text" name="en" value="${esc(t.emergency?.name)}"></div><div><label>Emergency contact phone</label><input type="tel" name="ep" value="${esc(t.emergency?.phone)}"></div></div>
+<h3 style="margin-top:14px">Competency tickets <span class="mut small">(tick and enter expiry)</span></h3>${S.settings.comps.map((c,i)=>`<div class="row" style="margin:4px 0"><label class="chk sp" style="margin:0"><input type="checkbox" name="cp${i}" ${t.comps?.[c]?'checked':''}> ${esc(c)}</label><input type="date" name="cd${i}" style="width:160px" value="${esc(t.comps?.[c]||'')}"></div>`).join('')}<br><div class="row"><button class="btn primary sp">${t.id?'Save changes':'Register user'}</button><button type="button" class="btn" data-act="closeModal">Cancel</button></div></form>`}
+ACT.newUser=()=>modal(`<h3>Register new user</h3>${userForm(null,cur())}`);
+ACT.editUser=d=>modal(`<h3>Edit user</h3>${userForm(byId(d.id),cur())}`);
+FORMS.user=(f,fd)=>{const u=cur(),id=f.dataset.id,role=id?byId(id).role:fd.get('role');if(u.role==='supervisor'&&!['employee','vendor'].includes(role))return toast('Supervisors can only register employees and vendors','bad');
+const email=String(fd.get('email')).trim();if(!/^\S+@\S+\.\S+$/.test(email))return toast('Enter a valid email','bad');if(S.users.some(x=>x.id!==id&&x.email&&x.email.toLowerCase()===email.toLowerCase()))return toast('That email is already registered','bad');
+const company=String(fd.get('company')||'').trim();if(role==='vendor'&&!company)return toast('Vendors need a company name','bad');if(role==='employee'&&(!fd.get('skill')||!fd.get('level')))return toast('Employees need a skill and skill level','bad');
+const dob=fd.get('dob');if(dob){const age=(Date.now()-new Date(dob))/31557600000;if(age<18)return toast('Minimum age for tunnel work is 18','bad')}
+const comps={};S.settings.comps.forEach((c,i)=>{if(fd.get('cp'+i)){if(!fd.get('cd'+i))comps[c]='';else comps[c]=fd.get('cd'+i)}});if(Object.values(comps).some(v=>!v))return toast('Enter an expiry date for each ticked competency','bad');
+const data={name:fd.get('name'),email,phone:fd.get('phone'),address:fd.get('address'),skill:fd.get('skill'),level:fd.get('level'),company,dob,blood:fd.get('blood'),emergency:{name:fd.get('en'),phone:fd.get('ep')},comps};
+if(id){tx(()=>{const t=byId(id);const b={...t};Object.assign(t,data);const ch=Object.keys(data).filter(k=>JSON.stringify(b[k])!==JSON.stringify(data[k]));log({action:'USER_UPDATED',cat:'user',target:tgt('user',t),before:ch.map(k=>k+': '+JSON.stringify(b[k])).join(' | '),after:ch.map(k=>k+': '+JSON.stringify(data[k])).join(' | '),detail:ch.length?'Fields changed: '+ch.join(', '):'No changes'})});closeModal();toast('Saved','ok');render();return}
+const pin=String(Math.floor(100000+Math.random()*900000));let nu;tx(()=>{nu=addUser({...data,role,createdBy:u.name},pin,true);log({action:'USER_REGISTERED',cat:'user',target:tgt('user',nu),detail:`Registered as ${cap(role)}: ${nu.skill||'—'} ${nu.level||''} ${nu.company?'· '+nu.company:''}`,approval:APPR('approved',u.name,u.role,'manual')})});
+PEOPLE.sel=nu.id;modal(`<h3>✅ ${esc(nu.name)} registered</h3><div class="card" style="text-align:center"><div class="mut">Login ID</div><div style="font-size:26px;font-weight:800">${esc(nu.code)}</div><div class="mut" style="margin-top:8px">Temporary PIN (shown once)</div><div style="font-size:30px;font-weight:800;letter-spacing:4px">${pin}</div></div><p class="small mut">Give these to the person securely. They must set their own PIN at first login. (Automatic email sending is a later improvement.)</p><button class="btn primary block" data-act="closeModal">Done</button>`);render()};
+ACT.resetPin=d=>{if(!confirm('Reset PIN for this user?'))return;const pin=String(Math.floor(100000+Math.random()*900000)),t=byId(d.id);tx(()=>{const x=byId(d.id);x.salt=uid();x.pinHash=pinHash(pin,x.salt);x.mustChange=true;x.failed=0;x.lockedUntil=0;log({action:'PIN_RESET',cat:'user',target:tgt('user',x),detail:'PIN reset by administrator'})});modal(`<h3>New temporary PIN for ${esc(t.name)}</h3><div style="font-size:32px;font-weight:800;text-align:center;letter-spacing:4px">${pin}</div><p class="small mut">Shown once. They must change it at next login.</p><button class="btn primary block" data-act="closeModal">Done</button>`)};
+ACT.toggleUser=d=>{const t=byId(d.id),why=prompt((t.active?'Deactivate':'Re-activate')+' '+t.name+'. Reason (required):','');if(!why)return;const u=cur();tx(()=>{const x=byId(d.id);x.active=!x.active;log({action:x.active?'USER_REACTIVATED':'USER_DEACTIVATED',cat:'user',target:tgt('user',x),detail:'Reason: '+why,approval:APPR(x.active?'reactivated':'deactivated',u.name,u.role,'manual',why)})});render()};
+
+/* =============================== SAFETY (SOS + incidents) =============================== */
+VIEWS.safety=u=>{const s=activeSOS();let h='<h1>Safety</h1>';
+if(s){const left=new Date(s.reasonDueAt)-Date.now(),snap=s.snapshot.map(id=>({u:byId(id),m:s.muster[id],inside:!!openAtt(id)}));
+h+=`<div class="card" style="border:3px solid var(--bad)"><h3 style="color:var(--bad)">🛑 Stop-work ACTIVE</h3>${kv('Raised by',esc(s.byName)+' ('+cap(s.byRole)+')')}${kv('Time',fmtDT(s.at))}${kv('Location',esc(s.location)||'—')}${kv('Acknowledged by',s.acks.map(a=>esc(uname(a.userId))+' '+fmtT(a.at)).join(', '))}${kv('Reason',s.reason?`<b>${esc(s.cat)}</b><br>${esc(s.reason)}<div class="small mut">by ${esc(s.reasonByName)} at ${fmtDT(s.reasonAt)}${s.reasonLate?' – <b style="color:var(--bad)">LATE</b>':''}</div>`:left>0?`<b>Due in ${dur(left)}</b>`:`<b style="color:var(--bad)">OVERDUE by ${dur(left)}</b>`)}
+<div class="row" style="margin-top:8px">${s.reason?'':'<button class="btn primary" data-act="sosReason">Provide reason</button>'}${u.role==='manager'?'<button class="btn ok" data-act="sosLift">Lift stop-work…</button>':'<span class="small mut">Only a Manager can lift stop-work.</span>'}</div></div>
+<h2>Muster – people inside when alert was raised (${snap.length})</h2>${snap.length?`<div class="card list">${snap.map(x=>`<div><div class="sp"><b>${esc(x.u?.name)}</b> <span class="mut small">${esc(x.u?.code)}</span><div class="small mut">${x.inside?'Still recorded inside':'Exit recorded'}${x.m?' · accounted for '+fmtT(x.m.at)+' ('+esc(x.m.how)+')':''}</div></div><button class="btn sm ${x.m?'ok':'bad'}" data-act="muster" data-s="${s.id}" data-u="${x.u?.id}">${x.m?'✓ Accounted for':'Not accounted'}</button></div>`).join('')}</div>`:'<div class="card mut">Nobody was recorded inside.</div>'}`}
+else h+=`<div class="card"><b>No stop-work active.</b> <span class="mut">Anyone can raise it using the red button at the top of the screen.</span></div>`;
+h+=`<div class="row"><h2 class="sp">Incidents & near-misses</h2><button class="btn" data-act="incident">＋ Report</button></div><div class="tablewrap"><table><tr><th>No.</th><th>Time</th><th>Type</th><th>Severity</th><th>Where</th><th>By</th><th>Details</th></tr>${S.incidents.slice().reverse().map(i=>`<tr><td>${i.no}</td><td>${fmtDT(i.at)}</td><td>${esc(i.type)}</td><td>${badge(i.sev,i.sev==='Critical'||i.sev==='High'?'bad':i.sev==='Medium'?'warn':'')}</td><td>${esc(i.zone)}</td><td>${esc(i.byName)}</td><td>${esc(i.desc)}${i.person?'<br><i>'+esc(i.person)+'</i>':''}</td></tr>`).join('')||'<tr><td colspan="7" class="mut">None recorded.</td></tr>'}</table></div>
+<h2>Stop-work history</h2><div class="tablewrap"><table><tr><th>Raised</th><th>By</th><th>Reason</th><th>Reason recorded</th><th>Lifted</th></tr>${S.sos.slice().reverse().map(x=>`<tr><td>${fmtDT(x.at)}</td><td>${esc(x.byName)}</td><td>${esc(x.cat)} ${esc(x.reason)}</td><td>${x.reasonAt?fmtDT(x.reasonAt)+(x.reasonLate?' <b style="color:var(--bad)">LATE</b>':''):'—'}</td><td>${x.resolvedAt?fmtDT(x.resolvedAt)+' by '+esc(x.resolvedByName)+'<br>'+esc(x.resolution):'<b>Active</b>'}</td></tr>`).join('')||'<tr><td colspan="5" class="mut">None.</td></tr>'}</table></div>`;return h};
+
+/* =============================== DASHBOARD =============================== */
+VIEWS.dash=u=>{const emps=S.users.filter(x=>x.role==='employee'&&x.active),cl=emps.map(e=>({e,c:clearanceFor(e.id)})),n=k=>cl.filter(x=>x.c.status===k).length,inside=S.att.filter(a=>!a.exitAt),od=inside.filter(isOverdue),s=activeSOS(),pc=pendingCount(u),dayList=[...Array(7)].map((_,i)=>addDays(todayKey(),i-6));
+const bars=dayList.map(d=>{const r={c:0,x:0,i:0};emps.forEach(e=>{const st=clearanceFor(e.id,d).status;if(st==='cleared')r.c++;else if(st==='not_cleared'||st==='pending')r.x++;else r.i++});return{d,...r}}),tot=emps.length||1;
+const soon=cl.filter(x=>x.c.status==='cleared'&&x.c.ci.until&&x.c.ci.until<=addDays(todayKey(),5)),expc=S.users.filter(x=>x.active&&x.role==='employee'&&expiredComps(x).length);
+const al=[];if(s)al.push(`<div class="alert bad">🛑 <b>Stop-work active</b> – ${s.reason?'reason recorded':'reason due '+fmtT(s.reasonDueAt)} <button class="btn sm" data-act="go" data-v="safety">Open</button></div>`);
+if(od.length)al.push(`<div class="alert bad">⏰ <b>${od.length} overdue</b> in tunnel: ${od.map(a=>esc(uname(a.userId))).join(', ')} <button class="btn sm" data-act="go" data-v="inside">View</button></div>`);
+if(pc)al.push(`<div class="alert warn">✅ <b>${pc}</b> item(s) waiting for review <button class="btn sm" data-act="go" data-v="reviews">Review</button></div>`);
+if(soon.length)al.push(`<div class="alert info">📄 Certificates expiring within 5 days: ${soon.map(x=>esc(x.e.name)+' ('+fmtD(x.c.ci.until)+')').join(', ')}</div>`);
+if(expc.length)al.push(`<div class="alert warn">🎫 Expired competency tickets: ${expc.map(x=>esc(x.name)+' – '+esc(expiredComps(x).join(', '))).join('; ')}</div>`);
+const by={};cl.forEach(x=>{const k=x.e.company||'In-house';by[k]=by[k]||{n:0,c:0,i:0};by[k].n++;if(x.c.status==='cleared')by[k].c++;if(openAtt(x.e.id))by[k].i++});
+return`<h1>Site overview</h1>${al.join('')||'<div class="alert ok">All clear – no alerts.</div>'}
+<div class="grid g4"><div class="kpi" data-act="go" data-v="people"><b>${emps.length}</b><span>Active workforce</span></div><div class="kpi ok"><b>${n('cleared')}</b><span>Cleared today</span></div><div class="kpi warn" data-act="go" data-v="reviews"><b>${n('pending')}</b><span>Pending review</span></div><div class="kpi bad"><b>${n('not_cleared')}</b><span>Not cleared</span></div><div class="kpi"><b>${n('incomplete')}</b><span>Not submitted</span></div><div class="kpi" data-act="go" data-v="inside"><b>${inside.length}</b><span>In tunnel now</span></div><div class="kpi ${od.length?'bad':''}"><b>${od.length}</b><span>Overdue exits</span></div><div class="kpi" data-act="go" data-v="safety"><b>${S.incidents.filter(i=>i.at.slice(0,10)===todayKey()).length}</b><span>Incidents today</span></div></div>
+<div class="grid g2" style="margin-top:12px">${card('Last 7 days – clearance',`<div class="bars">${bars.map(b=>`<div><i style="height:${b.i/tot*100}%;background:#cbd5e1"></i><i style="height:${b.x/tot*100}%;background:var(--bad)"></i><i style="height:${b.c/tot*100}%;background:var(--ok)"></i>${fmtD(b.d).slice(0,6)}</div>`).join('')}</div><div class="small mut" style="margin-top:6px"><span style="color:var(--ok)">■</span> cleared <span style="color:var(--bad)">■</span> not cleared / pending <span style="color:#94a3b8">■</span> incomplete</div>`)}
+${card('By company',`<div class="tablewrap"><table><tr><th>Company</th><th>People</th><th>Cleared</th><th>Inside</th></tr>${Object.entries(by).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${v.n}</td><td>${v.c}</td><td>${v.i}</td></tr>`).join('')}</table></div>`)}</div>
+${card('Latest activity',`<div class="list">${S.audit.slice(-6).reverse().map(e=>`<div><div class="sp small"><b>${esc(e.action.replace(/_/g,' '))}</b> · ${esc(e.targetName)}<div class="mut">${esc(e.actorName)} · ${fmtDT(e.ts)}</div></div></div>`).join('')}</div><button class="btn sm" data-act="go" data-v="audit">Open audit book</button>`)}`};
+
+/* =============================== AUDIT BOOK =============================== */
+let AUD={from:'',to:'',actor:'',cat:'',q:'',mode:'all',page:0};
+function auditRows(){const f=AUD,q=f.q.toLowerCase();return S.audit.filter(e=>(!f.from||dkey(new Date(e.ts))>=f.from)&&(!f.to||dkey(new Date(e.ts))<=f.to)&&(!f.actor||e.actorId===f.actor)&&(!f.cat||e.cat===f.cat)&&(f.mode!=='approvals'||e.approval)&&(!q||JSON.stringify(e).toLowerCase().includes(q))).slice().reverse()}
+VIEWS.audit=u=>{const rows=auditRows(),per=60,pg=Math.min(AUD.page,Math.max(0,Math.ceil(rows.length/per)-1)),sl=rows.slice(pg*per,pg*per+per);
+return`<h1>Audit book</h1><p class="mut">Every action, who did it, who approved it, and when. Entries are chained with hashes so edits or deletions can be detected.</p>
+<div class="row" style="margin-bottom:8px"><button class="btn sm ${AUD.mode==='all'?'dark':''}" data-act="audMode" data-m="all">All actions</button><button class="btn sm ${AUD.mode==='approvals'?'dark':''}" data-act="audMode" data-m="approvals">Approvals ledger</button><span class="sp"></span><button class="btn sm" data-act="verify">🔒 Verify integrity</button><button class="btn sm primary" data-act="expAudit">⬇ Excel</button></div>
+<form class="card" data-form="audFilter"><div class="grid g4"><div><label>From</label><input type="date" name="from" value="${AUD.from}"></div><div><label>To</label><input type="date" name="to" value="${AUD.to}"></div><div><label>Category</label><select name="cat"><option value="">All</option>${['auth','health','certificate','attendance','sos','user','incident','export','settings','system'].map(c=>`<option ${AUD.cat===c?'selected':''}>${c}</option>`).join('')}</select></div><div><label>Search</label><input type="search" name="q" value="${esc(AUD.q)}" placeholder="name, ID, action…"></div></div><label>Done by (searchable)</label>${combo('audActor',S.users,{sel:AUD.actor,ph:'Anyone'})}<br><div class="row"><button class="btn dark">Apply filters</button><button type="button" class="btn" data-act="audReset">Clear</button><span class="mut small">${rows.length} entries</span></div></form>
+<div class="tablewrap"><table>${AUD.mode==='approvals'?`<tr><th>Date & time</th><th>Item</th><th>Subject</th><th>Decision</th><th>Approved / decided by</th><th>Method</th><th>Note</th><th></th></tr>${sl.map(e=>`<tr><td>${fmtDT(e.ts)}</td><td>${esc(e.action.replace(/_/g,' '))}</td><td>${esc(e.targetName)} <span class="mut">${esc(e.targetId)}</span></td><td>${badge(esc(e.approval.decision),/approv|allow|react|recorded/.test(e.approval.decision)?'ok':'bad')}</td><td><b>${esc(e.approval.by)}</b> <span class="mut">${cap(e.approval.byRole)}</span></td><td>${esc(e.approval.method)}</td><td>${esc(e.approval.note)}</td><td><button class="btn sm" data-act="auditOpen" data-s="${e.seq}">View</button></td></tr>`).join('')}`:`<tr><th>#</th><th>Date & time</th><th>Done by</th><th>Action</th><th>Subject</th><th>Details</th><th>Approved by</th><th></th></tr>${sl.map(e=>`<tr><td>${e.seq}</td><td>${fmtDT(e.ts)}</td><td>${esc(e.actorName)}<div class="mut small">${esc(e.actorCode)} · ${cap(e.actorRole)}</div></td><td><b>${esc(e.action.replace(/_/g,' '))}</b><div class="mut small">${e.cat}</div></td><td>${esc(e.targetName)}<div class="mut small">${esc(e.targetId)}</div></td><td style="min-width:240px">${esc(e.detail.length>160?e.detail.slice(0,160)+'…':e.detail)}</td><td>${e.approval?esc(e.approval.by)+'<div class="mut small">'+esc(e.approval.decision)+'</div>':'—'}</td><td><button class="btn sm" data-act="auditOpen" data-s="${e.seq}">View</button></td></tr>`).join('')}`}</table></div>
+<div class="row" style="margin-top:8px"><button class="btn sm" data-act="audPage" data-p="${pg-1}" ${pg<=0?'disabled':''}>◀ Newer</button><span class="small mut">Page ${pg+1} / ${Math.max(1,Math.ceil(rows.length/per))}</span><button class="btn sm" data-act="audPage" data-p="${pg+1}" ${(pg+1)*per>=rows.length?'disabled':''}>Older ▶</button></div>`};
+FORMS.audFilter=(f,fd)=>{AUD={...AUD,from:fd.get('from'),to:fd.get('to'),cat:fd.get('cat'),q:fd.get('q')||'',actor:fd.get('audActor')||'',page:0};render()};
+ACT.audMode=d=>{AUD.mode=d.m;AUD.page=0;render()};ACT.audReset=()=>{AUD={from:'',to:'',actor:'',cat:'',q:'',mode:AUD.mode,page:0};render()};ACT.audPage=d=>{AUD.page=+d.p;render();window.scrollTo(0,0)};
+ACT.verify=()=>{const r=verifyChain();modal(r.ok?`<h3>✅ Audit book intact</h3><p>${r.n} entries verified. No edits, deletions or insertions detected.</p><button class="btn block" data-act="closeModal">OK</button>`:`<h3 style="color:var(--bad)">⚠ Integrity check FAILED</h3><p>The chain breaks at entry <b>#${r.seq}</b>. Records may have been altered.</p><button class="btn block" data-act="closeModal">OK</button>`)};
+ACT.auditOpen=d=>{const e=S.audit.find(x=>x.seq==d.s);modal(`<h3>Audit entry #${e.seq}</h3>${kv('Time',fmtDT(e.ts)+' ('+e.ts+')')}${kv('Done by',esc(e.actorName)+' · '+esc(e.actorCode)+' · '+cap(e.actorRole))}${kv('Action',esc(e.action))}${kv('Category',e.cat)}${kv('Subject',esc(e.targetName)+' '+esc(e.targetId)+' ('+e.targetType+')')}${kv('Details',esc(e.detail))}${e.before?kv('Before',esc(e.before)):''}${e.after?kv('After',esc(e.after)):''}${e.approval?kv('Decision',esc(e.approval.decision))+kv('Decided by',esc(e.approval.by)+' ('+cap(e.approval.byRole)+')')+kv('Method',esc(e.approval.method))+kv('Note',esc(e.approval.note)):''}${kv('Device',esc(e.device))}${kv('Hash',`<span style="font-family:monospace;font-size:12px">${e.hash}</span>`)}${kv('Previous hash',`<span style="font-family:monospace;font-size:12px">${e.prev}</span>`)}<br><button class="btn block" data-act="closeModal">Close</button>`)};
+
+/* =============================== EXPORT / REPORTS =============================== */
+function dl(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+async function exportX(name,sheets,note){const u=cur();let fmt='xlsx';
+try{await loadLib('xlsx');const wb=XLSX.utils.book_new();sheets.forEach(s=>{const rows=s.rows.length?s.rows:[{Info:'No records for this selection'}],ws=XLSX.utils.json_to_sheet(rows);ws['!cols']=Object.keys(rows[0]).map(k=>({wch:Math.min(50,Math.max(k.length+2,...rows.slice(0,50).map(r=>String(r[k]??'').length+2)))}));XLSX.utils.book_append_sheet(wb,ws,s.name.slice(0,31))});XLSX.writeFile(wb,name+'.xlsx')}
+catch(e){fmt='csv';const r=sheets[0].rows;const keys=r.length?Object.keys(r[0]):['Info'];const csv=[keys.join(',')].concat(r.map(x=>keys.map(k=>'"'+String(x[k]??'').replace(/"/g,'""')+'"').join(','))).join('\n');dl(name+'.csv',new Blob(['\ufeff'+csv],{type:'text/csv'}));toast('Excel library unavailable offline – saved as CSV (opens in Excel)')}
+tx(()=>log({action:'DATA_EXPORTED',cat:'export',actor:u,target:{type:'export',id:name,name},detail:`${fmt.toUpperCase()} export "${name}": ${sheets.map(s=>s.name+' '+s.rows.length+' rows').join(', ')}. ${note||''}`}));}
+const A_in=d=>S.att.filter(a=>a.date>=d[0]&&a.date<=d[1]);
+function vendorRows(co,from,to){const out=[];S.att.filter(a=>a.date>=from&&a.date<=to).forEach(a=>{const w=byId(a.userId);if(!w||w.company!==co||w.role!=='employee')return;out.push({Date:a.date,'Employee ID':w.code,Name:w.name,Skill:w.skill,'Skill level':w.level,'Fit for work':VST[clearanceFor(w.id,a.date).status],'Entry time':fmtT(a.entryAt),'Exit time':a.exitAt?fmtT(a.exitAt):'still inside','Hours on site':a.exitAt?+hoursBetween(a.entryAt,a.exitAt):''})});return out.sort((a,b)=>a.Date.localeCompare(b.Date)||a.Name.localeCompare(b.Name))}
+function attRows(from,to){return S.att.filter(a=>a.date>=from&&a.date<=to).map(a=>{const w=byId(a.userId)||{};return{Date:a.date,'Employee ID':w.code,Name:w.name,Role:cap(w.role),Company:w.company||'In-house',Skill:w.skill,Zone:a.zone,'Entry time':fmtDT(a.entryAt),'Entry approved by':a.entryByName,'Entry method':a.entryMethod,'Manual reason':a.entryWhy,'Competency override':a.override,'Planned exit':fmtDT(a.plannedExit),'Exit time':a.exitAt?fmtDT(a.exitAt):'',"Exit recorded by":a.exitByName||'','Exit method':a.exitMethod||'','Hours':a.exitAt?+hoursBetween(a.entryAt,a.exitAt):'','Notes':a.notes}})}
+function clrRows(from,to){const out=[];S.users.filter(x=>x.role==='employee').forEach(w=>{for(let d=from;d<=to;d=addDays(d,1)){const c=clearanceFor(w.id,d);if(c.ds==='none'&&c.ci.state==='none')continue;const x=c.decl,ce=c.ci.cert,e=ce?ceff(ce):{};out.push({Date:d,'Employee ID':w.code,Name:w.name,Company:w.company||'In-house',Temperature:x?.answers.temp??'','Sleep h':x?.answers.sleep??'','Rest h':x?.answers.rest??'',Stress:x?.answers.stress??'',Symptoms:x?.answers.symptoms.join('; ')||'','Alcohol/drugs':x?.answers.alcohol||'','Declaration result':x?.result||'',Flags:x?.flags.map(f=>f.msg).join('; ')||'','Declaration reviewed by':x?.review?`${x.review.byName} (${x.review.decision})`:'', 'Review time':x?.review?fmtDT(x.review.at):'','Review note':x?.review?.note||'','Cert appointment date':e.date||'','Cert clinic':e.clinic||'','Cert fitness':e.fitness||'','Cert status':ce?CSTAT[ce.status][0].replace(/^\S+ /,''):'','Cert approved by':ce?(ce.review?ce.review.byName:ce.status==='auto_approved'?'System (automatic)':''):'','Overall status':VST[c.status]})}});return out}
+let RP={co:'',from:addDays(todayKey(),-7),to:todayKey()};
+VIEWS.reports=u=>{RP.co=RP.co||companies()[0]||'';const vr=RP.co?vendorRows(RP.co,RP.from,RP.to):[];
+return`<h1>Reports & exports</h1><form class="card" data-form="rp"><div class="grid g4"><div><label>From</label><input type="date" name="from" value="${RP.from}"></div><div><label>To</label><input type="date" name="to" value="${RP.to}"></div><div><label>Vendor company</label><select name="co">${companies().map(c=>`<option ${RP.co===c?'selected':''}>${esc(c)}</option>`).join('')||'<option value="">— none —</option>'}</select></div></div><br><button class="btn dark">Update preview</button></form>
+${card('📤 Vendor report (safe to send)',`<p class="small mut">Contains only: date, ID, name, skill, level, fit-for-work status, entry/exit times and hours. <b>No medical details, symptoms or approver notes.</b></p><div class="tablewrap" style="max-height:260px"><table>${vr.length?`<tr>${Object.keys(vr[0]).map(k=>`<th>${k}</th>`).join('')}</tr>${vr.slice(0,40).map(r=>`<tr>${Object.values(r).map(v=>`<td>${esc(v)}</td>`).join('')}</tr>`).join('')}`:'<tr><td class="mut">No attendance for this vendor in the period.</td></tr>'}</table></div><br><button class="btn primary" data-act="expVendor" ${RP.co?'':'disabled'}>⬇ Download Excel for ${esc(RP.co)}</button>`)}
+${card('📋 Full attendance (internal)',`<p class="small mut">Complete entry/exit log with approvers, methods, overrides and notes.</p><button class="btn" data-act="expAtt">⬇ Download Excel (${attRows(RP.from,RP.to).length} rows)</button>`)}
+${card('🩺 Health clearance log (internal, confidential)',`<p class="small mut">Declaration answers, flags, certificate details and who approved. Do not send to vendors.</p><button class="btn" data-act="expClr">⬇ Download Excel</button>`)}
+${card('👥 Staff register',`<button class="btn" data-act="expUsers">⬇ Download Excel</button>`)}`};
+FORMS.rp=(f,fd)=>{RP={co:fd.get('co'),from:fd.get('from'),to:fd.get('to')};render()};
+const rpNote=()=>`Period ${RP.from} to ${RP.to}${RP.co?', vendor '+RP.co:''}`;
+ACT.expVendor=()=>exportX(`Vendor_${RP.co.replace(/\W+/g,'_')}_${RP.from}_to_${RP.to}`,[{name:'Attendance',rows:vendorRows(RP.co,RP.from,RP.to)}],rpNote());
+ACT.expAtt=()=>exportX(`Attendance_${RP.from}_to_${RP.to}`,[{name:'Attendance',rows:attRows(RP.from,RP.to)}],rpNote());
+ACT.expClr=()=>exportX(`Health_clearance_${RP.from}_to_${RP.to}`,[{name:'Clearance',rows:clrRows(RP.from,RP.to)}],rpNote());
+ACT.expUsers=()=>exportX('Staff_register',[{name:'Staff',rows:S.users.map(x=>({ID:x.code,Name:x.name,Role:cap(x.role),Email:x.email,Phone:x.phone,Address:x.address,Skill:x.skill,Level:x.level,Company:x.company||'In-house',Active:x.active?'Yes':'No',Registered:fmtDT(x.created),'Registered by':x.createdBy}))}]);
+ACT.expAudit=()=>{const r=auditRows();exportX('Audit_book',[{name:'Audit',rows:r.slice().reverse().map(e=>({'#':e.seq,'Date & time':fmtDT(e.ts),'ISO time':e.ts,'Done by':e.actorName,'Done by ID':e.actorCode,'Role':cap(e.actorRole),Action:e.action,Category:e.cat,Subject:e.targetName,'Subject ID':e.targetId,Details:e.detail,Before:e.before,After:e.after,'Decision':e.approval?.decision||'','Approved by':e.approval?.by||'','Approver role':e.approval?cap(e.approval.byRole):'','Approval method':e.approval?.method||'','Approval note':e.approval?.note||'',Device:e.device,Hash:e.hash}))}],`${r.length} entries; filters: ${JSON.stringify({...AUD,page:undefined})}`)};
+
+/* =============================== SETTINGS (manager) =============================== */
+VIEWS.settings=u=>{const s=S.settings;return`<h1>Settings</h1><form data-form="settings">${card('Health rules',`<div class="grid g2"><div><label>Temperature limit (°C)</label><input type="number" step="0.1" name="tempMax" value="${s.tempMax}"></div><div><label>Minimum sleep (h)</label><input type="number" step="0.5" name="sleepMin" value="${s.sleepMin}"></div><div><label>Minimum rest between shifts (h)</label><input type="number" step="0.5" name="restMin" value="${s.restMin}"></div><div><label>Certificate valid for (days)</label><input type="number" name="certDays" value="${s.certDays}"></div><div><label>Certificate reader min. confidence (%)</label><input type="number" name="minOcrConf" value="${s.minOcrConf}"></div></div>`)}
+${card('Operations',`<div class="grid g2"><div><label>Default shift length (h)</label><input type="number" step="0.5" name="shiftHrs" value="${s.shiftHrs}"></div><div><label>Overdue grace (minutes)</label><input type="number" name="graceMin" value="${s.graceMin}"></div><div><label>Stop-work reason deadline (minutes)</label><input type="number" name="sosReasonMin" value="${s.sosReasonMin}"></div><div><label>Auto sign-out after idle (minutes)</label><input type="number" name="idleMin" value="${s.idleMin}"></div></div><label>Organisation name</label><input type="text" name="company" value="${esc(s.company)}">`)}
+${card('Lists (one per line)',`<div class="grid g2"><div><label>Tunnel zones</label><textarea name="zones" rows="7">${esc(s.zones.join('\n'))}</textarea></div><div><label>Skills</label><textarea name="skills" rows="7">${esc(s.skills.join('\n'))}</textarea></div><div><label>Competency tickets</label><textarea name="comps" rows="7">${esc(s.comps.join('\n'))}</textarea></div></div>`)}
+${card('Demo mode',`<label class="chk"><input type="checkbox" name="demoMode" ${s.demoMode?'checked':''}> Show demo accounts on login and allow typed-text certificate testing. <b>Turn OFF before going live.</b></label>`)}<button class="btn primary lg block">Save settings</button></form>
+${card('Data & backup',`<div class="row"><button class="btn" data-act="backup">⬇ Backup (JSON)</button><label class="btn" style="margin:0">⬆ Restore<input type="file" id="restoreFile" accept=".json" hidden></label><button class="btn" data-act="verify">🔒 Verify audit integrity</button><button class="btn bad" data-act="wipe">Delete all data…</button></div><p class="small mut">Data is stored in this browser only. Certificate photos are not included in the backup.</p>`)}
+${card('Planned later (not active)',['Smart helmets / wearables (heart-rate, fatigue)','Gas & environmental sensors','Biometric turnstiles / shift doors','Automatic email / SMS to new users and vendors','Central server so all devices share live data','Push notifications for stop-work'].map(x=>`<label class="chk" style="opacity:.6"><input type="checkbox" disabled> ${x}</label>`).join(''))}`};
+FORMS.settings=(f,fd)=>{const u=cur(),n=k=>+fd.get(k),l=k=>String(fd.get(k)).split('\n').map(x=>x.trim()).filter(Boolean);
+tx(()=>{const b=JSON.stringify(S.settings);const s=S.settings;Object.assign(s,{tempMax:n('tempMax'),sleepMin:n('sleepMin'),restMin:n('restMin'),certDays:n('certDays'),minOcrConf:n('minOcrConf'),shiftHrs:n('shiftHrs'),graceMin:n('graceMin'),sosReasonMin:n('sosReasonMin'),idleMin:n('idleMin'),company:fd.get('company'),zones:l('zones'),skills:l('skills'),comps:l('comps'),demoMode:!!fd.get('demoMode')});log({action:'SETTINGS_CHANGED',cat:'settings',target:{type:'settings',id:'settings',name:'Settings'},before:b,after:JSON.stringify(s),detail:'Settings updated',approval:APPR('approved',u.name,u.role,'manual')})});toast('Settings saved','ok');render()};
+ACT.backup=()=>{dl(`tunnelguard_backup_${todayKey()}.json`,new Blob([JSON.stringify(S)],{type:'application/json'}));tx(()=>log({action:'BACKUP_DOWNLOADED',cat:'system',detail:'Full data backup downloaded'}))};
+function doRestore(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.users||!d.audit)throw 0;if(!confirm('Replace ALL current data with this backup?'))return;const u=cur();S=d;S.settings={...defaults(),...S.settings};save();tx(()=>log({action:'BACKUP_RESTORED',cat:'system',actor:u,detail:'Data restored from backup file'}));toast('Restored','ok');render()}catch(e){toast('Not a valid backup file','bad')}};r.readAsText(f)}
+ACT.wipe=()=>modal(`<h3 style="color:var(--bad)">Delete ALL data</h3><p>Removes users, health records, attendance, audit book – everything on this device. Download a backup first. You will set up a fresh Manager account afterwards.</p><form data-form="wipe"><label>Type DELETE</label><input type="text" name="w" required><label>Your PIN</label><input type="password" name="pin" inputmode="numeric" required><br><div class="row"><button class="btn bad sp">Delete everything</button><button type="button" class="btn" data-act="closeModal">Cancel</button></div></form>`);
+FORMS.wipe=(f,fd)=>{const u=cur();if(fd.get('w')!=='DELETE'||pinHash(String(fd.get('pin')),u.salt)!==u.pinHash)return toast('Confirmation or PIN incorrect','bad');localStorage.removeItem(KEY);try{indexedDB.deleteDatabase('tg_imgs')}catch(e){}sessionStorage.removeItem('tg_ses');SES=null;S=blank();LASTRAW=null;closeModal();render();toast('All data deleted')};
+
+/* =============================== VENDOR VIEWS (restricted) =============================== */
+VIEWS.vwork=u=>{const ws=S.users.filter(x=>x.role==='employee'&&x.active&&x.company===u.company);return`<h1>${esc(u.company)}</h1><div class="alert info small">You see only what is needed to plan work: fit-for-work status and site attendance. Medical details are never shared with vendors.</div>${ws.map(w=>{const c=clearanceFor(w.id),a=openAtt(w.id);return`<div class="card"><div class="row"><div class="sp"><b>${esc(w.name)}</b> <span class="mut small">${esc(w.code)}</span><div class="small mut">${esc(w.skill)} · ${esc(w.level)}</div></div>${badge(VST[c.status],{cleared:'ok',pending:'warn',not_cleared:'bad',incomplete:''}[c.status])}</div><div class="small">${a?`🚇 On site since ${fmtT(a.entryAt)}`:'Not on site now'}</div></div>`}).join('')||'<div class="card mut">No workers registered for your company yet.</div>'}`};
+let VA={from:addDays(todayKey(),-7),to:todayKey()};
+VIEWS.vatt=u=>{const r=vendorRows(u.company,VA.from,VA.to);return`<h1>Attendance</h1><form class="card" data-form="vatt"><div class="grid g2"><div><label>From</label><input type="date" name="from" value="${VA.from}"></div><div><label>To</label><input type="date" name="to" value="${VA.to}"></div></div><br><button class="btn dark">Show</button></form><div class="tablewrap"><table>${r.length?`<tr>${Object.keys(r[0]).map(k=>`<th>${k}</th>`).join('')}</tr>${r.map(x=>`<tr>${Object.values(x).map(v=>`<td>${esc(v)}</td>`).join('')}</tr>`).join('')}`:'<tr><td class="mut">No attendance in this period.</td></tr>'}</table></div><p class="small mut">Need an Excel copy? Ask your site supervisor to send the vendor report.</p>`};
+FORMS.vatt=(f,fd)=>{VA={from:fd.get('from'),to:fd.get('to')};render()};
+
+/* =============================== DEMO DATA =============================== */
+function seedDemo(){S=blank();const T=todayKey(),now=Date.now(),iso=ms=>new Date(ms).toISOString(),mk=(role,name,o={})=>addUser({role,name,email:name.toLowerCase().replace(/\W+/g,'.')+'@demo.example',phone:'+65 9'+String(1000000+Math.floor(Math.random()*8999999)),address:'Demo address',emergency:{name:'Family contact',phone:'+65 9123 4567'},createdBy:'Demo seed',...o},'1234',false);
+const cp=(x={})=>({'Tunnel Induction':'2027-06-30','Confined Space Entry':'2027-03-31','First Aid / CPR':'2027-01-31',...x});
+const mgr=mk('manager','Priya Nair'),s1=mk('supervisor','Daniel Tan'),s2=mk('supervisor','Marcus Lee');
+const emps=[['Ravi Kumar','TBM Operator','Expert',''],['Ahmad Rahman','Tunnel Miner','Skilled',''],['Chen Wei','Surveyor','Advanced',''],['Jose Santos','Electrician','Skilled',''],['Lina Hoffmann','Ventilation Technician','Advanced',''],['Karthik Raman','Driller','Skilled','GeoDrill Pte Ltd'],['Somchai Prasert','Rock Bolter','Semi-skilled','GeoDrill Pte Ltd'],['Mei Lin Ong','Grouting Operator','Trainee','GeoDrill Pte Ltd'],['Hassan Ali','Steel Fixer','Skilled','SteelWorks Co']].map(([n,s,l,c],i)=>mk('employee',n,{skill:s,level:l,company:c,dob:'1990-05-1'+(i%9+1),comps:cp(n==='Jose Santos'?{'Confined Space Entry':'2026-09-01'}:{}),blood:['O+','A+','B+'][i%3]}));
+mk('vendor','Vikram Shah',{company:'GeoDrill Pte Ltd'});mk('vendor','Sarah Chua',{company:'SteelWorks Co'});
+const clinics=['City Occupational Health Clinic','Harbour Medical Centre','Northgate Family Clinic'];
+emps.forEach((e,i)=>{const ad=addDays(T,-6);S.certs.push({id:uid(),userId:e.id,uploadedAt:iso(now-6*864e5),imgId:null,img:null,imgHash:'',ocr:{date:ad,clinic:clinics[i%3],fitness:'fit',conf:88,nameMatch:true,raw:'(demo seed)'},issues:[],status:'auto_approved',final:null,review:null});
+for(let k=5;k>=1;k--){const d=addDays(T,-k);if(i===3&&k===2){S.decls.push({id:uid(),userId:e.id,date:d,submittedAt:iso(now-k*864e5),answers:{temp:37.9,sleep:7,rest:10,stress:2,symptoms:['Fever or chills'],alcohol:'no',meds:'no',illness:'no',contact:'no',alert:'yes',notes:''},flags:[{sev:'block',msg:'Temperature 37.9°C is at/above the 37.5°C limit'}],result:'block',review:null});continue}
+S.decls.push({id:uid(),userId:e.id,date:d,submittedAt:iso(now-k*864e5),answers:{temp:+(36.4+((i*3+k)%5)/10).toFixed(1),sleep:7,rest:11,stress:2,symptoms:[],alcohol:'no',meds:'no',illness:'no',contact:'no',alert:'yes',notes:''},flags:[],result:'ok',review:null});
+if((i+k)%7!==0){const en=new Date(d+'T07:'+pad(10+i)+':00').getTime(),ex=en+(8.5+(i%3)*.5)*36e5,sup=k%2?s1:s2;S.att.push({id:uid(),userId:e.id,date:d,zone:S.settings.zones[(i+k)%5],entryAt:iso(en),plannedExit:iso(en+9*36e5),entryBy:sup.id,entryByName:sup.name,entryMethod:'qr',entryWhy:'',override:'',notes:'',exitAt:iso(ex),exitBy:sup.id,exitByName:sup.name,exitMethod:'qr',overdueLogged:true})}}
+});
+const okDecl=e=>S.decls.push({id:uid(),userId:e.id,date:T,submittedAt:iso(now-3*36e5),answers:{temp:36.6,sleep:7,rest:12,stress:2,symptoms:[],alcohol:'no',meds:'no',illness:'no',contact:'no',alert:'yes',notes:''},flags:[],result:'ok',review:null});
+[0,1,2,4,5].forEach(i=>okDecl(emps[i]));
+S.decls.push({id:uid(),userId:emps[3].id,date:T,submittedAt:iso(now-2*36e5),answers:{temp:36.8,sleep:4.5,rest:9,stress:3,symptoms:[],alcohol:'no',meds:'no',illness:'no',contact:'no',alert:'yes',notes:'Baby was ill last night'},flags:[{sev:'review',msg:'Only 4.5h sleep (minimum 6h)'}],result:'review',review:null});
+S.decls.push({id:uid(),userId:emps[7].id,date:T,submittedAt:iso(now-2*36e5),answers:{temp:38.1,sleep:7,rest:10,stress:2,symptoms:['Fever or chills','Cough'],alcohol:'no',meds:'no',illness:'no',contact:'no',alert:'yes',notes:''},flags:[{sev:'block',msg:'Temperature 38.1°C is at/above the 37.5°C limit'},{sev:'review',msg:'Symptom: Fever or chills'},{sev:'review',msg:'Symptom: Cough'}],result:'block',review:null});
+const lc=emps[4];S.certs.push({id:uid(),userId:lc.id,uploadedAt:iso(now-36e5),imgId:null,img:null,imgHash:'',ocr:{date:T,clinic:'Harbour Medical Centre',fitness:'fit',conf:71,nameMatch:false,raw:'(demo seed)'},issues:['Patient name does not match '+lc.name],status:'pending_review',final:null,review:null});
+const inEntry=(e,ent,plan,zone)=>S.att.push({id:uid(),userId:e.id,date:T,zone,entryAt:iso(ent),plannedExit:iso(plan),entryBy:s1.id,entryByName:s1.name,entryMethod:'qr',entryWhy:'',override:'',notes:'',exitAt:null,overdueLogged:false});
+inEntry(emps[1],now-3*36e5,now+5*36e5,'TBM Face');inEntry(emps[2],now-9*36e5,now-40*6e4,'Cross Passage A');inEntry(emps[5],now-2*36e5,now+6*36e5,'Station Box');
+S.incidents.push({id:uid(),no:'INC-0001',type:'Near miss',sev:'Medium',zone:'Cross Passage B',desc:'Loose rock fragment fell near walkway; area barricaded.',by:s1.id,byName:s1.name,at:iso(now-2*864e5),person:''});
+log({action:'DEMO_DATA_LOADED',cat:'system',actor:SYS,detail:'Demo organisation created with sample users, attendance and certificates. Demo PIN 1234.'});
+mgr.consent=s1.consent=s2.consent=null;save();SES=null;sessionStorage.removeItem('tg_ses')}
+
+/* =============================== START =============================== */
+load();
+if(SES&&!cur()){SES=null;sessionStorage.removeItem('tg_ses')}
+render();
+</script>
+</body>
+</html>
